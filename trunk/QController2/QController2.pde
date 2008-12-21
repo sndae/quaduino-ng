@@ -27,12 +27,12 @@ int n, i;
 // Value arrays
 int GYRO_ZERO[] = {0, 0, 0};
 int GYRO_RAW[] = {0, 0, 0};
-int GYRO_ANGLE[] = {0, 0, 0};
-int GYRO_BIAS[] = {0, 0, 0};
+float GYRO_ANGLE[] = {0, 0, 0};
+float GYRO_BIAS[] = {0, 0, 0};
 int ACCEL_ZERO[] = {0, 0, 0};
 int ACCEL_RAW[] = {0, 0, 0};
-int ACCEL_ANGLE[] = {0, 0, 0};
-int ORIENTATION[] = {0, 0, 0};
+int ACCEL_ANGLE[] = {0, 0};
+float ORIENTATION[] = {0, 0, 0};
 
 // Timing variables
 #define EXPECTED_LOOP_TIME 3

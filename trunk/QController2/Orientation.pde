@@ -5,14 +5,19 @@ void updateOrientation(int deltaTime) {
   updateGyros();
   
   for(n=0;n<3;n++) {
-    GYRO_ANGLE[n] += ((GYRO_RAW[n] / 1000.0) * deltaTime);
+    // GYRO_RAW is change in degree / second. Divide by 1000 to get degree / ms and 
+    // multiply with elapsed time to get rotation since last update
+    // 5000mV / 1024 (10-bit ADC resolution) = 4.8828125 mV for each ADC value
+    // 5mv / degree / second
+    int degPerSec = ((GYRO_RAW[n] * 4.8828125) / 5);
+    GYRO_ANGLE[n] += ((degPerSec / 1000.0) * deltaTime);
   }
   
-  // Update bias every 10 ms
+  // Update bias every 20 ms
   if(millis()-lastAccelUpdate>20) {
     updateAccel();
     for(n=0;n<2;n++) {
-      GYRO_BIAS[n] = (GYRO_BIAS[n]*0.8 + (GYRO_ANGLE[n] - ACCEL_ANGLE[n])*0.2);
+      GYRO_BIAS[n] = (GYRO_BIAS[n]*6 + (GYRO_ANGLE[n] - ACCEL_ANGLE[n])*2) / 8;
     }
     lastAccelUpdate = millis();
   }
