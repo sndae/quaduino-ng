@@ -28,6 +28,8 @@ void updateAccel() {
   ACCEL_RAW[0] = (ACCEL_RAW[0] / 4) - ACCEL_ZERO[0];
   ACCEL_RAW[1] = (ACCEL_RAW[1] / 4) - ACCEL_ZERO[1];
   ACCEL_RAW[2] = (ACCEL_RAW[2] / 4) - ACCEL_ZERO[2];
+  
+  // TODO: Update ACCEL_ANGLE
 }
 
 void updateGyros() {
