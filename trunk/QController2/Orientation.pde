@@ -5,7 +5,7 @@ void updateOrientation(int deltaTime) {
   updateGyros();
   
   for(n=0;n<3;n++) {
-    // GYRO_RAW is change in degree / second. Divide by 1000 to get degree / ms and 
+    // GYRO_RAW is ADC values for change in degree / second. Divide by 1000 to get degree / ms and 
     // multiply with elapsed time to get rotation since last update
     // 5000mV / 1024 (10-bit ADC resolution) = 4.8828125 mV for each ADC value
     // 5mv / degree / second
