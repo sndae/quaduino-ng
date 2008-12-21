@@ -1,4 +1,5 @@
 
+int lastAccelUpdate = 0;
 
 void updateOrientation(int deltaTime) {
   updateGyros();
