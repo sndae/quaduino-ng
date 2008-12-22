@@ -1,3 +1,27 @@
+/*
+** Sensor wiring diagram
+**
+** ADXRS300 gyros are hooked up on Analog pins 0-2. 
+**  - Analog 0 : Pitch Gyro
+**  - Analog 1 : Roll Gyro
+**  - Analog 2 : Yaw Gyro
+**
+** LIS3LV02DQ accelerometer is hooked up through
+** the I2C interface using the official Wire library
+**  - Analog 4 : SDA (data line)
+**  - Analog 5 : SCL (clock line)
+**
+*/
+
+// EEPROM Adresses
+#define ACCEL_ZERO_PITCH_ADDRESS 0
+#define ACCEL_ZERO_ROLL_ADDRESS 2
+#define ACCEL_ZERO_YAW_ADDRESS 4
+
+// Gyro ADC pins
+#define PIN_GYRO_PITCH 0
+#define PIN_GYRO_ROLL 1
+#define PIN_GYRO_YAW 2
 
 void initSensors() {
   zeroGyros();
@@ -58,7 +82,7 @@ void zeroGyros() {
   }
 }
 
-void zeroAccel() {
+void calibrateAccel() {
   ACCEL_ZERO[0] = i2cReadAccel(0x28);
   ACCEL_ZERO[1] = i2cReadAccel(0x2a);
   ACCEL_ZERO[2] = i2cReadAccel(0x2c);
