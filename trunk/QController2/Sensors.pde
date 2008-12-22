@@ -60,25 +60,19 @@ void updateAccel() {
 }
 
 void updateGyros() {
-  GYRO_RAW[0] = 0; GYRO_RAW[1] = 0; GYRO_RAW[2] = 0;
-  for(n=0;n<16;n++) {
-    GYRO_RAW[0] += analogRead(PIN_GYRO_PITCH);
-    GYRO_RAW[1] += analogRead(PIN_GYRO_ROLL);
-    GYRO_RAW[2] += analogRead(PIN_GYRO_YAW);
-  }
-  GYRO_RAW[0] = (GYRO_RAW[0] / 16) - GYRO_ZERO[0];
-  GYRO_RAW[1] = (GYRO_RAW[1] / 16) - GYRO_ZERO[1];
-  GYRO_RAW[2] = (GYRO_RAW[2] / 16) - GYRO_ZERO[2];
+  GYRO_RAW[0] = (GYRO_RAW[0]*15 + (analogRead(PIN_GYRO_PITCH)-GYRO_ZERO[0])) / 16;
+  GYRO_RAW[1] = (GYRO_RAW[1]*15 + (analogRead(PIN_GYRO_ROLL)-GYRO_ZERO[1])) / 16;
+  GYRO_RAW[2] = (GYRO_RAW[2]*15 + (analogRead(PIN_GYRO_YAW)-GYRO_ZERO[2])) / 16;
 }
 
 void zeroGyros() {
   GYRO_ZERO[INDEX_PITCH] = analogRead(PIN_GYRO_PITCH);
   GYRO_ZERO[INDEX_ROLL] = analogRead(PIN_GYRO_ROLL);
   GYRO_ZERO[INDEX_YAW] = analogRead(PIN_GYRO_YAW);
-  for(n=0;n<100;n++) {
-    GYRO_ZERO[INDEX_PITCH] = (GYRO_ZERO[INDEX_PITCH]*7 + analogRead(PIN_GYRO_PITCH)) / 8;
-    GYRO_ZERO[INDEX_ROLL] = (GYRO_ZERO[INDEX_ROLL]*7 + analogRead(PIN_GYRO_ROLL)) / 8;
-    GYRO_ZERO[INDEX_YAW] = (GYRO_ZERO[INDEX_YAW]*7 + analogRead(PIN_GYRO_YAW)) / 8;
+  for(n=0;n<128;n++) {
+    GYRO_ZERO[INDEX_ROLL] = (GYRO_ZERO[INDEX_ROLL]*31 + analogRead(PIN_GYRO_ROLL)) / 32;
+    GYRO_ZERO[INDEX_PITCH] = (GYRO_ZERO[INDEX_PITCH]*31 + analogRead(PIN_GYRO_PITCH)) / 32;
+    GYRO_ZERO[INDEX_YAW] = (GYRO_ZERO[INDEX_YAW]*31 + analogRead(PIN_GYRO_YAW)) / 32;
   }
 }
 

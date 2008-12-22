@@ -25,11 +25,11 @@ void checkRadio() {
 void calibrateRadio() {
   long calibrationStart = millis();
   for(n=0;n<6;n++) { // Init the array
-    RADIO_ZERO[n] = ServoDecode.GetChannelPulseWidth(n);
+    RADIO_ZERO[n] = ServoDecode.GetChannelPulseWidth(n+1);
   }
   while(millis()-calibrationStart<500) { // Do as many samples as we can for 500ms
     for(n=0;n<6;n++) {
-      RADIO_ZERO[n] = (RADIO_ZERO[n]*7 + ServoDecode.GetChannelPulseWidth(n)) / 8;
+      RADIO_ZERO[n] = (RADIO_ZERO[n] + ServoDecode.GetChannelPulseWidth(n+1)) / 2;
     }
   }
 }
@@ -40,7 +40,7 @@ void updateRadio() {
   // Update RC data every 20 ms
   if(millis()-lastRcUpdate>20) {
     for(n=0;n<6;n++) {
-      RADIO_VALUE[n] = ServoDecode.GetChannelPulseWidth(n) - RADIO_ZERO[n];
+      RADIO_VALUE[n] = (((RADIO_VALUE[n]+RADIO_ZERO[n]) + ServoDecode.GetChannelPulseWidth(n+1)) / 2) - RADIO_ZERO[n];
     }
     lastRcUpdate = millis();
   }
