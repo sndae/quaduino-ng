@@ -33,7 +33,7 @@ int lastLoopUsefulTime = EXPECTED_LOOP_TIME;
 
 
 void setup() {
-  Serial.begin(38400);
+  Serial.begin(57600);
   ServoDecode.begin();
   initSensors();
   initMotors();
