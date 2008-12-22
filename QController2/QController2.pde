@@ -34,20 +34,60 @@ int lastLoopUsefulTime = EXPECTED_LOOP_TIME;
 
 void setup() {
   Serial.begin(38400);
+  ServoDecode.begin();
   initSensors();
   initMotors();
-  ServoDecode.begin();
   checkRadio();
   calibrateRadio();
+  initPID();
 }
 
+int count = 0;
 void loop() {
   loopStartTime = millis();
   
   updateOrientation(lastLoopTime);
-  updateRadio();
-  decodeMotorCommands();
+//  updateRadio();
+//  decodeMotorCommands();
+//  updatePID();
   
+  if(count++>20) {
+    Serial.print(RADIO_VALUE[0]);
+    Serial.print(":");
+    Serial.print(RADIO_VALUE[1]);
+    Serial.print(":");
+    Serial.print(RADIO_VALUE[2]);
+    Serial.print(":");
+    Serial.print(RADIO_VALUE[3]);
+    Serial.print(":");
+    Serial.print(RADIO_VALUE[4]);
+    Serial.print(":");
+    Serial.print(RADIO_VALUE[5]);
+    Serial.print(":");
+    Serial.print(":");    
+    Serial.print(int(GYRO_RAW[0]));
+    Serial.print(":");
+    Serial.print(int(GYRO_RAW[1]));
+    Serial.print(":");
+    Serial.print(int(GYRO_RAW[2]));
+    Serial.print("::");
+    Serial.print(ACCEL_ANGLE[0]);
+    Serial.print(":");
+    Serial.print(ACCEL_ANGLE[1]);
+    Serial.print(":");
+    Serial.print(":");
+    Serial.print(int(ORIENTATION[0]));
+    Serial.print(":");
+    Serial.print(int(ORIENTATION[1]));
+    Serial.print(":");
+    Serial.print(int(ORIENTATION[2]));
+    Serial.print(":");
+    Serial.print(":");
+    Serial.print(ServoDecode.getState());
+    Serial.print(":");
+    Serial.println(lastLoopTime);
+    count = 0;
+  }
   
   SoftwareServo::refresh();
   
