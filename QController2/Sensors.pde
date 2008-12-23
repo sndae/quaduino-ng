@@ -56,7 +56,7 @@ void updateAccel() {
   // Roll angle
   // atan2(gy,sqrt(gx*gx + gz*gz))
 //  ACCEL_ANGLE[0] = (atan2(ACCEL_RAW[2], ACCEL_RAW[1]) * 180) / PI;
-  ACCEL_ANGLE[0] = (atan2(ACCEL_RAW[1], sqrt(ACCEL_RAW[0]*ACCEL_RAW[0]+ACCEL_RAW[2]*ACCEL_RAW[2])) * 180) / PI;
+  ACCEL_ANGLE[0] = (atan2(ACCEL_RAW[2], sqrt(ACCEL_RAW[0]*ACCEL_RAW[0]+ACCEL_RAW[1]*ACCEL_RAW[1])) * 180) / PI;
 }
 
 void updateGyros() {
@@ -87,7 +87,7 @@ void calibrateAccel() {
     ACCEL_ZERO[1] = (ACCEL_ZERO[1]*3 + i2cReadAccel(0x2a)) / 4;
     ACCEL_ZERO[2] = (ACCEL_ZERO[2]*3 + i2cReadAccel(0x2c)) / 4;
   }
-  ACCEL_ZERO[1] -= 512; // Subtract gravity on Y-axis
+  ACCEL_ZERO[1] -= 1024; // Subtract gravity on Y-axis
     // Write values to EEPROM
   writeInt(ACCEL_ZERO[0], ACCEL_ZERO_PITCH_ADDRESS);
   writeInt(ACCEL_ZERO[1], ACCEL_ZERO_ROLL_ADDRESS);
