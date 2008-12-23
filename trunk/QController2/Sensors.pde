@@ -24,7 +24,6 @@
 #define PIN_GYRO_YAW 2
 
 void initSensors() {
-  zeroGyros();
    // Join I2C BUS as master
   Wire.begin();
   // Initialize the LIS3LV02DQ
@@ -40,39 +39,42 @@ void initSensors() {
   Serial.print(ACCEL_ZERO[1]);
   Serial.print(", ");
   Serial.println(ACCEL_ZERO[2]);
+  Serial.print("Zeroing gyros: ");
+  zeroGyros();
+  Serial.println("Completed");
 }
 
 void updateAccel() {
-  ACCEL_RAW[0] = 0; ACCEL_RAW[1] = 0; ACCEL_RAW[2] = 0;
-  for(n=0;n<4;n++) {
-    ACCEL_RAW[0] += i2cReadAccel(0x28);
-    ACCEL_RAW[1] += i2cReadAccel(0x2a);
-    ACCEL_RAW[2] += i2cReadAccel(0x2c);
-  }
-  ACCEL_RAW[0] = (ACCEL_RAW[0] / 4) - ACCEL_ZERO[0];
-  ACCEL_RAW[1] = (ACCEL_RAW[1] / 4) - ACCEL_ZERO[1];
-  ACCEL_RAW[2] = (ACCEL_RAW[2] / 4) - ACCEL_ZERO[2];
+  ACCEL_RAW[0] = i2cReadAccel(0x28) - ACCEL_ZERO[0];
+  ACCEL_RAW[1] = i2cReadAccel(0x2a) - ACCEL_ZERO[1];
+  ACCEL_RAW[2] = i2cReadAccel(0x2c) - ACCEL_ZERO[2];
   
   // Pitch angle (using non-optimized version just now)
-  ACCEL_ANGLE[0] = atan2(-ACCEL_RAW[0], ACCEL_RAW[1]) * 180/PI;
+  // atan2(gx,sqrt(gy*gy + gz*gz)) 
+//  ACCEL_ANGLE[1] = (atan2(ACCEL_RAW[0], ACCEL_RAW[1]) * 180) / PI;
+  ACCEL_ANGLE[1] = (atan2(ACCEL_RAW[0], sqrt(ACCEL_RAW[1]*ACCEL_RAW[1]+ACCEL_RAW[2]*ACCEL_RAW[2])) * 180) / PI;
   // Roll angle
-  ACCEL_ANGLE[1] = atan2(ACCEL_RAW[2], ACCEL_RAW[1]) * 180/PI;
+  // atan2(gy,sqrt(gx*gx + gz*gz))
+//  ACCEL_ANGLE[0] = (atan2(ACCEL_RAW[2], ACCEL_RAW[1]) * 180) / PI;
+  ACCEL_ANGLE[0] = (atan2(ACCEL_RAW[1], sqrt(ACCEL_RAW[0]*ACCEL_RAW[0]+ACCEL_RAW[2]*ACCEL_RAW[2])) * 180) / PI;
 }
 
 void updateGyros() {
-  GYRO_RAW[0] = (GYRO_RAW[0]*15 + (analogRead(PIN_GYRO_PITCH)-GYRO_ZERO[0])) / 16;
-  GYRO_RAW[1] = (GYRO_RAW[1]*15 + (analogRead(PIN_GYRO_ROLL)-GYRO_ZERO[1])) / 16;
-  GYRO_RAW[2] = (GYRO_RAW[2]*15 + (analogRead(PIN_GYRO_YAW)-GYRO_ZERO[2])) / 16;
+  GYRO_RAW[INDEX_PITCH] = analogRead(PIN_GYRO_PITCH) - GYRO_ZERO[INDEX_PITCH];
+  GYRO_RAW[INDEX_ROLL] = analogRead(PIN_GYRO_ROLL) - GYRO_ZERO[INDEX_ROLL];
+  GYRO_RAW[INDEX_YAW] = analogRead(PIN_GYRO_YAW) - GYRO_ZERO[INDEX_YAW];
+  for(n=0;n<3;n++) if(abs(GYRO_RAW[n])<4) GYRO_RAW[n] = 0;
 }
 
 void zeroGyros() {
   GYRO_ZERO[INDEX_PITCH] = analogRead(PIN_GYRO_PITCH);
   GYRO_ZERO[INDEX_ROLL] = analogRead(PIN_GYRO_ROLL);
   GYRO_ZERO[INDEX_YAW] = analogRead(PIN_GYRO_YAW);
-  for(n=0;n<128;n++) {
-    GYRO_ZERO[INDEX_ROLL] = (GYRO_ZERO[INDEX_ROLL]*31 + analogRead(PIN_GYRO_ROLL)) / 32;
-    GYRO_ZERO[INDEX_PITCH] = (GYRO_ZERO[INDEX_PITCH]*31 + analogRead(PIN_GYRO_PITCH)) / 32;
-    GYRO_ZERO[INDEX_YAW] = (GYRO_ZERO[INDEX_YAW]*31 + analogRead(PIN_GYRO_YAW)) / 32;
+  for(n=0;n<100;n++) {
+    GYRO_ZERO[INDEX_ROLL] = (GYRO_ZERO[INDEX_ROLL] + analogRead(PIN_GYRO_ROLL)) / 2;
+    GYRO_ZERO[INDEX_PITCH] = (GYRO_ZERO[INDEX_PITCH] + analogRead(PIN_GYRO_PITCH)) / 2;
+    GYRO_ZERO[INDEX_YAW] = (GYRO_ZERO[INDEX_YAW] + analogRead(PIN_GYRO_YAW)) / 2;
+    delay(5);
   }
 }
 

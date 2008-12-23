@@ -51,7 +51,7 @@ void loop() {
 //  decodeMotorCommands();
 //  updatePID();
   
-  if(count++>20) {
+  if(count++>40) {
     Serial.print(RADIO_VALUE[0]);
     Serial.print(":");
     Serial.print(RADIO_VALUE[1]);
@@ -65,11 +65,11 @@ void loop() {
     Serial.print(RADIO_VALUE[5]);
     Serial.print(":");
     Serial.print(":");    
-    Serial.print(int(GYRO_RAW[0]));
+    Serial.print(int(GYRO_ANGLE[0]));
     Serial.print(":");
-    Serial.print(int(GYRO_RAW[1]));
+    Serial.print(int(GYRO_ANGLE[1]));
     Serial.print(":");
-    Serial.print(int(GYRO_RAW[2]));
+    Serial.print(int(GYRO_ANGLE[2]));
     Serial.print("::");
     Serial.print(ACCEL_ANGLE[0]);
     Serial.print(":");
@@ -85,11 +85,13 @@ void loop() {
     Serial.print(":");
     Serial.print(ServoDecode.getState());
     Serial.print(":");
-    Serial.println(lastLoopTime);
+    Serial.print(lastLoopTime);
+    Serial.print("|");
+    Serial.println(millis() - loopStartTime);
     count = 0;
   }
   
-  SoftwareServo::refresh();
+//  SoftwareServo::refresh();
   
   lastLoopUsefulTime = millis()-loopStartTime;
   if(lastLoopUsefulTime<EXPECTED_LOOP_TIME) {
