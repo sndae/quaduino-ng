@@ -47,8 +47,8 @@ void loop() {
   loopStartTime = millis();
   
   updateOrientation(lastLoopTime);
-//  updateRadio();
-//  decodeMotorCommands();
+  updateRadio();
+  decodeMotorCommands();
 //  updatePID();
   
   if(count++>40) {
