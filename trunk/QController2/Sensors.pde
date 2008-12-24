@@ -44,19 +44,27 @@ void initSensors() {
   Serial.println("Completed");
 }
 
+long x, y, z;
+
 void updateAccel() {
   ACCEL_RAW[0] = i2cReadAccel(0x28) - ACCEL_ZERO[0];
   ACCEL_RAW[1] = i2cReadAccel(0x2a) - ACCEL_ZERO[1];
   ACCEL_RAW[2] = i2cReadAccel(0x2c) - ACCEL_ZERO[2];
+  x = ACCEL_RAW[0];
+  y = ACCEL_RAW[1];
+  z = ACCEL_RAW[2];
+  
+  ACCEL_ANGLE[0] = int(round(atan2(x, sqrt(y*y+z*z))*180.0/PI));
+  ACCEL_ANGLE[1] = int(round(atan2(z, sqrt(x*x+y*y))*180.0/PI));
   
   // Pitch angle (using non-optimized version just now)
   // atan2(gx,sqrt(gy*gy + gz*gz)) 
 //  ACCEL_ANGLE[1] = (atan2(ACCEL_RAW[0], ACCEL_RAW[1]) * 180) / PI;
-  ACCEL_ANGLE[1] = (atan2(ACCEL_RAW[0], sqrt(ACCEL_RAW[1]*ACCEL_RAW[1]+ACCEL_RAW[2]*ACCEL_RAW[2])) * 180) / PI;
+//  ACCEL_ANGLE[1] = (atan2(ACCEL_RAW[0], sqrt(ACCEL_RAW[1]*ACCEL_RAW[1]+ACCEL_RAW[2]*ACCEL_RAW[2])) * 180) / PI;
   // Roll angle
   // atan2(gy,sqrt(gx*gx + gz*gz))
 //  ACCEL_ANGLE[0] = (atan2(ACCEL_RAW[2], ACCEL_RAW[1]) * 180) / PI;
-  ACCEL_ANGLE[0] = (atan2(ACCEL_RAW[2], sqrt(ACCEL_RAW[0]*ACCEL_RAW[0]+ACCEL_RAW[1]*ACCEL_RAW[1])) * 180) / PI;
+//  ACCEL_ANGLE[0] = (atan2(ACCEL_RAW[2], sqrt(ACCEL_RAW[0]*ACCEL_RAW[0]+ACCEL_RAW[1]*ACCEL_RAW[1])) * 180) / PI;
 }
 
 void updateGyros() {
