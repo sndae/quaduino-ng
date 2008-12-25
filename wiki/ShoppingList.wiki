@@ -1,2 +1,4 @@
+#labels Phase-Requirements
 This is the current shopping list for the Quaduino:
-  * 
+
+  * 1x [http://www.sparkfun.com/commerce/product_info.php?products_id=758 Triple Axis Accelerometer Breakout - LIS3LV02DQ]
