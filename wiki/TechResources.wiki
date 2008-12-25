@@ -1,4 +1,4 @@
-===Arduino Resource===
+===Arduino Resources===
   * [http://www.arduino.cc/playground/Code/PIDLibrary Arduino PID Library]
   * [http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1208368036 Calculating tilt from 3-axis accelerometer readings]
 ===Papers===
