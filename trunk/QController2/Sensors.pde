@@ -40,50 +40,59 @@ void initSensors() {
   Serial.print(", ");
   Serial.println(ACCEL_ZERO[2]);
   Serial.print("Zeroing gyros: ");
+  calibrateGyros();
   zeroGyros();
   Serial.println("Completed");
 }
 
-long x, y, z;
+long outX, outY, outZ;
 
 void updateAccel() {
-  ACCEL_RAW[0] = i2cReadAccel(0x28) - ACCEL_ZERO[0];
-  ACCEL_RAW[1] = i2cReadAccel(0x2a) - ACCEL_ZERO[1];
-  ACCEL_RAW[2] = i2cReadAccel(0x2c) - ACCEL_ZERO[2];
-  x = ACCEL_RAW[0];
-  y = ACCEL_RAW[1];
-  z = ACCEL_RAW[2];
-  
-  ACCEL_ANGLE[0] = int(round(atan2(x, sqrt(y*y+z*z))*180.0/PI));
-  ACCEL_ANGLE[1] = int(round(atan2(z, sqrt(x*x+y*y))*180.0/PI));
-  
+  outX = i2cReadAccel(0x28) - ACCEL_ZERO[0]; 
+  outZ = i2cReadAccel(0x2a) - ACCEL_ZERO[1];
+  outY = i2cReadAccel(0x2c) - ACCEL_ZERO[2];
+
   // Pitch angle (using non-optimized version just now)
-  // atan2(gx,sqrt(gy*gy + gz*gz)) 
-//  ACCEL_ANGLE[1] = (atan2(ACCEL_RAW[0], ACCEL_RAW[1]) * 180) / PI;
-//  ACCEL_ANGLE[1] = (atan2(ACCEL_RAW[0], sqrt(ACCEL_RAW[1]*ACCEL_RAW[1]+ACCEL_RAW[2]*ACCEL_RAW[2])) * 180) / PI;
+  // atan2(gx, sqrt(gy*gy + gz*gz)) 
+  // ACCEL_ANGLE[1] = (atan2(ACCEL_RAW[0], ACCEL_RAW[1]) * 180) / PI;
+  ACCEL_ANGLE[INDEX_PITCH] = int(round(atan2(outX, sqrt(outY*outY+outZ*outZ))*512.0/PI));
+
   // Roll angle
-  // atan2(gy,sqrt(gx*gx + gz*gz))
-//  ACCEL_ANGLE[0] = (atan2(ACCEL_RAW[2], ACCEL_RAW[1]) * 180) / PI;
-//  ACCEL_ANGLE[0] = (atan2(ACCEL_RAW[2], sqrt(ACCEL_RAW[0]*ACCEL_RAW[0]+ACCEL_RAW[1]*ACCEL_RAW[1])) * 180) / PI;
+  // atan2(gy, sqrt(gx*gx + gz*gz))
+  // ACCEL_ANGLE[0] = (atan2(ACCEL_RAW[2], ACCEL_RAW[1]) * 180) / PI;
+  ACCEL_ANGLE[INDEX_ROLL] = int(round(atan2(outY, sqrt(outX*outX+outZ*outZ))*512.0/PI));
 }
 
 void updateGyros() {
-  GYRO_RAW[INDEX_PITCH] = analogRead(PIN_GYRO_PITCH) - GYRO_ZERO[INDEX_PITCH];
+  GYRO_RAW[INDEX_PITCH] = -(analogRead(PIN_GYRO_PITCH) - GYRO_ZERO[INDEX_PITCH]);
   GYRO_RAW[INDEX_ROLL] = analogRead(PIN_GYRO_ROLL) - GYRO_ZERO[INDEX_ROLL];
   GYRO_RAW[INDEX_YAW] = analogRead(PIN_GYRO_YAW) - GYRO_ZERO[INDEX_YAW];
   for(n=0;n<3;n++) if(abs(GYRO_RAW[n])<4) GYRO_RAW[n] = 0;
 }
 
 void zeroGyros() {
+  for(n=0;n<3;n++) {
+    GYRO_ANGLE[n] = 0;
+    GYRO_BIAS[n] = 0;
+  }
+  Serial.println("Gyro angles zeroed");
+}
+
+void calibrateGyros() {
   GYRO_ZERO[INDEX_PITCH] = analogRead(PIN_GYRO_PITCH);
   GYRO_ZERO[INDEX_ROLL] = analogRead(PIN_GYRO_ROLL);
   GYRO_ZERO[INDEX_YAW] = analogRead(PIN_GYRO_YAW);
   for(n=0;n<100;n++) {
-    GYRO_ZERO[INDEX_ROLL] = (GYRO_ZERO[INDEX_ROLL] + analogRead(PIN_GYRO_ROLL)) / 2;
     GYRO_ZERO[INDEX_PITCH] = (GYRO_ZERO[INDEX_PITCH] + analogRead(PIN_GYRO_PITCH)) / 2;
+    GYRO_ZERO[INDEX_ROLL] = (GYRO_ZERO[INDEX_ROLL] + analogRead(PIN_GYRO_ROLL)) / 2;
     GYRO_ZERO[INDEX_YAW] = (GYRO_ZERO[INDEX_YAW] + analogRead(PIN_GYRO_YAW)) / 2;
-    delay(5);
   }
+  Serial.print("Gyro zero calibrated: ");
+  Serial.print(GYRO_ZERO[0]);
+  Serial.print(", ");
+  Serial.print(GYRO_ZERO[1]);
+  Serial.print(", ");
+  Serial.println(GYRO_ZERO[2]);
 }
 
 void calibrateAccel() {
