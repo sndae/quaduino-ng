@@ -6,10 +6,10 @@ This is the current shopping list for the Quaduino:
   * 1x [http://www.sparkfun.com/commerce/product_info.php?products_id=7914 Arduino ProtoShield Kit] $16.95
 
 *Sensors*
-  * 1x [http://www.sparkfun.com/commerce/product_info.php?products_id=758 Triple Axis Accelerometer Breakout - LIS3LV02DQ]
-  * 3x [http://www.sparkfun.com/commerce/product_info.php?products_id=395 Gyro Breakout Board - ADXRS300 - 300 degree/sec]
-  * 1x [http://www.sparkfun.com/commerce/product_info.php?products_id=7915 Compass Module - HMC6352]
+  * 1x [http://www.sparkfun.com/commerce/product_info.php?products_id=758 Triple Axis Accelerometer Breakout - LIS3LV02DQ] $43.95
+  * 3x [http://www.sparkfun.com/commerce/product_info.php?products_id=395 Gyro Breakout Board - ADXRS300 - 300 degree/sec] $69.95
+  * 1x [http://www.sparkfun.com/commerce/product_info.php?products_id=7915 Compass Module - HMC6352] $59.95
 
 *Accessories*
-  * 2x [http://www.sparkfun.com/commerce/product_info.php?products_id=553 Break Away Headers - Right Angle]
-  * 1x [http://www.sparkfun.com/commerce/product_info.php?products_id=116 Break Away Headers - Straight]
+  * 2x [http://www.sparkfun.com/commerce/product_info.php?products_id=553 Break Away Headers - Right Angle] $1.95
+  * 1x [http://www.sparkfun.com/commerce/product_info.php?products_id=116 Break Away Headers - Straight] $2.50
