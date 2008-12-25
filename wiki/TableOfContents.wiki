@@ -1,0 +1,4 @@
+  * [ShoppingList Shopping List]
+  * [TechResources Technical Resources]
+  * [BuildShots Build Photos]
+  * [WiringInstructions Wiring Instructions]
