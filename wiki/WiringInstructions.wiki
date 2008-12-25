@@ -1,0 +1,6 @@
+#summary Wiring instructions for how to connect all the components together
+#labels Phase-Implementation
+
+= Wiring instructions =
+
+_Please take a look at the [ShoppingList] to ensure you have the correct components before starting your build._
