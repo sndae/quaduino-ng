@@ -17,8 +17,13 @@ Sum: $313.75
   * 1x [http://www.sparkfun.com/commerce/product_info.php?products_id=116 Break Away Headers - Straight] $2.50
 Sum: $6.40
 
-*RC Gear*
+*Motors*
   * 4x [http://www.hobbycity.com/hobbycity/store/uh_viewItem.asp?idProduct=2161 TURNIGY Plush 12amp (2A BEC) BESC] $16.15
   * 4x [http://www.hobbycity.com/hobbycity/store/uh_viewItem.asp?idProduct=5687 Turnigy 2209 28turn 1050kv 15A Outrunner] $16.95
-  * 1x PPM compatible receiver
 Sum: $132.40
+
+*Total sum: $504.45*
+
+*RC Gear*
+  * 1x PPM compatible receiver
+  * 1x Tramsmitter
