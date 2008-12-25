@@ -26,15 +26,26 @@ void initMotors() {
 }
 
 void decodeMotorCommands() {
-  if(RADIO_VALUE[2] < 210) {
+  if(RADIO_VALUE[2] < 210 && ServoDecode.getState()==2) {
     // Disarm motors(throttle down, yaw left)
     if(RADIO_VALUE[3] < -200 && motorsRunning) {
       commandAllMotors(OFFCOMMAND);
       motorsRunning = false;
     }
     
-    // Zero gyros (throttle down, yaw left, pitch up)
+    // Arm motors (throttle down, yaw right)  
+    if(RADIO_VALUE[3] > 200 && !motorsRunning) {
+      commandAllMotors(LOWCOMMAND);
+      motorsRunning = true;
+    }
+
+    // Calibrate gyros (throttle down, yaw left, pitch up)
     if(RADIO_VALUE[3] < -200 && RADIO_VALUE[1] > 200) {
+      calibrateGyros();
+    }
+
+    // Zero gyro angles (throttle down, yaw left, pitch down)
+    if(RADIO_VALUE[3] < -200 && RADIO_VALUE[1] < -200) {
       zeroGyros();
     }
 
@@ -43,11 +54,6 @@ void decodeMotorCommands() {
       calibrateAccel();
     }
     
-    // Arm motors (throttle down, yaw right)  
-    if(RADIO_VALUE[3] > 200 && !motorsRunning) {
-      commandAllMotors(LOWCOMMAND);
-      motorsRunning = true;
-    }
   }
 }
 

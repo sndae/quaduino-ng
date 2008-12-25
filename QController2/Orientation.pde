@@ -1,5 +1,6 @@
 
 int lastAccelUpdate = 0;
+float degPerSec = 0;
 
 void updateOrientation(int deltaTime) {
   updateGyros();
@@ -9,9 +10,10 @@ void updateOrientation(int deltaTime) {
     // multiply with elapsed time to get rotation since last update
     // 5000mV / 1024 (10-bit ADC resolution) = 4.8828125 mV for each ADC value
     // 5mv / degree / second
-    float degPerSec = ((GYRO_RAW[n] * 4.8828125) / 5);
-    GYRO_ANGLE[n] += ((degPerSec / 1000.0) * deltaTime);
-//    GYRO_ANGLE[n] += ((GYRO_RAW[n] / 1000.0) * deltaTime);
+//    degPerSec = ((GYRO_RAW[n] * 4.8828125) / 5) * 2.84444; // Convert from degrees into quids
+//    GYRO_ANGLE[n] += int((degPerSec / 1000.0) * deltaTime);
+
+      GYRO_ANGLE[n] += ((GYRO_RAW[n] * 2.7777) / 1000.0) * deltaTime;
   }
   
   // Update bias every 500ms
@@ -26,11 +28,11 @@ void updateOrientation(int deltaTime) {
   for(n=0;n<3;n++) {
     // YAW BIAS is 0 and therefore the final result is correct
     ORIENTATION[n] = GYRO_ANGLE[n] - GYRO_BIAS[n];
-    // Make sure the angle is within -180 and 180 degrees
-    if(ORIENTATION[n]>180) {
-      ORIENTATION[n] -= 360;
-    } else if(ORIENTATION[n]<-180) {
-      ORIENTATION[n] += 360;
+    // Make sure the angle is within -512 and 512 quids
+    if(ORIENTATION[n]>512) {
+      ORIENTATION[n] -= 1024;
+    } else if(ORIENTATION[n]<-512) {
+      ORIENTATION[n] += 1024;
     }
   }
 }
