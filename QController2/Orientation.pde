@@ -1,4 +1,3 @@
-
 unsigned long lastAccelUpdate = 0;
 float degPerSec = 0;
 
