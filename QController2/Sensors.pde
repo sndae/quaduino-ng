@@ -79,14 +79,18 @@ void zeroGyros() {
 }
 
 void calibrateGyros() {
-  GYRO_ZERO[INDEX_PITCH] = analogRead(PIN_GYRO_PITCH);
-  GYRO_ZERO[INDEX_ROLL] = analogRead(PIN_GYRO_ROLL);
-  GYRO_ZERO[INDEX_YAW] = analogRead(PIN_GYRO_YAW);
-  for(n=0;n<100;n++) {
-    GYRO_ZERO[INDEX_PITCH] = (GYRO_ZERO[INDEX_PITCH] + analogRead(PIN_GYRO_PITCH)) / 2;
-    GYRO_ZERO[INDEX_ROLL] = (GYRO_ZERO[INDEX_ROLL] + analogRead(PIN_GYRO_ROLL)) / 2;
-    GYRO_ZERO[INDEX_YAW] = (GYRO_ZERO[INDEX_YAW] + analogRead(PIN_GYRO_YAW)) / 2;
+  GYRO_ZERO[INDEX_PITCH] = 0; 
+  GYRO_ZERO[INDEX_ROLL] = 0;
+  GYRO_ZERO[INDEX_YAW] = 0;
+  for(n=0;n<32;n++) {
+    GYRO_ZERO[INDEX_PITCH] += analogRead(PIN_GYRO_PITCH);
+    GYRO_ZERO[INDEX_ROLL] += analogRead(PIN_GYRO_ROLL);
+    GYRO_ZERO[INDEX_YAW] += analogRead(PIN_GYRO_YAW);
   }
+  GYRO_ZERO[INDEX_PITCH] /= 32; 
+  GYRO_ZERO[INDEX_ROLL] /= 32;
+  GYRO_ZERO[INDEX_YAW] /= 32;
+  
   Serial.print("Gyro zero calibrated: ");
   Serial.print(GYRO_ZERO[0]);
   Serial.print(", ");
