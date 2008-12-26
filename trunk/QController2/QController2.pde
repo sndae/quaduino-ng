@@ -12,8 +12,7 @@
 
 // Index variables
 int n, i;
-// Temp variables
-unsigned long time;
+
 
 // Value arrays
 unsigned int GYRO_ZERO[] = {0, 0, 0};
@@ -27,10 +26,10 @@ int RADIO_VALUE[] = { 0, 0, 0, 0, 0, 0};
 int RADIO_ZERO[] = { 0, 0, 0, 0, 0, 0};
 
 // Timing variables
-//#define EXPECTED_LOOP_TIME 3
+#define EXPECTED_LOOP_TIME 3
 unsigned long loopStartTime = 0;
-int lastLoopTime = 0;//EXPECTED_LOOP_TIME;
-//int lastLoopUsefulTime = EXPECTED_LOOP_TIME;
+int lastLoopTime = EXPECTED_LOOP_TIME;
+int lastLoopUsefulTime = EXPECTED_LOOP_TIME;
 
 
 void setup() {
@@ -52,7 +51,7 @@ void loop() {
   decodeMotorCommands();
   updatePID();
   
-  if(count++>20) {
+/*  if(count++>20) {
     Serial.print(RADIO_VALUE[0]);
     Serial.print(":");
     Serial.print(RADIO_VALUE[1]);
@@ -89,13 +88,13 @@ void loop() {
     Serial.print(":");
     Serial.println(millis());
     count = 0;
-  }
+  }*/
   
   SoftwareServo::refresh();
   
-  //lastLoopUsefulTime = millis()-loopStartTime;
-  //if(lastLoopUsefulTime<EXPECTED_LOOP_TIME) {
-    //delay(EXPECTED_LOOP_TIME-lastLoopUsefulTime);
-  //}
+  lastLoopUsefulTime = millis()-loopStartTime;
+  if(lastLoopUsefulTime<EXPECTED_LOOP_TIME) {
+    delay(EXPECTED_LOOP_TIME-lastLoopUsefulTime);
+  }
   lastLoopTime = millis() - loopStartTime;
 }
