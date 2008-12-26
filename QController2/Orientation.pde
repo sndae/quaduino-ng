@@ -17,7 +17,7 @@ void updateOrientation(int deltaTime) {
   }
   
   // Update bias every 500ms
-  if(millis()-lastAccelUpdate>20 ) {
+  if(millis()-lastAccelUpdate>500 ) {
     updateAccel();
     for(n=0;n<2;n++) {
       GYRO_BIAS[n] = (GYRO_BIAS[n]*7 + (GYRO_ANGLE[n] - ACCEL_ANGLE[n])) / 8;
