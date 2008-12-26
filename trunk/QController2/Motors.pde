@@ -18,7 +18,7 @@ void initMotors() {
   motorWest.attach(PIN_WEST); motorWest.setMinimumPulse(1000); motorWest.setMaximumPulse(2000);
   motorEast.attach(PIN_EAST); motorEast.setMinimumPulse(1000); motorEast.setMaximumPulse(2000);
   commandAllMotors(OFFCOMMAND);
-  long time = millis();
+  time = millis();
   while(millis()<(time+4000)) { // Wait 4000ms to allow the ESCs to arm
     SoftwareServo::refresh();
   }

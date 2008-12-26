@@ -12,12 +12,14 @@
 
 // Index variables
 int n, i;
+// Temp variables
+unsigned long time;
 
 // Value arrays
-int GYRO_ZERO[] = {0, 0, 0};
+unsigned int GYRO_ZERO[] = {0, 0, 0};
 int GYRO_RAW[] = {0, 0, 0};
-int GYRO_ANGLE[] = {0, 0, 0};
-int GYRO_BIAS[] = {0, 0, 0};
+float GYRO_ANGLE[] = {0, 0, 0};
+float GYRO_BIAS[] = {0, 0, 0};
 int ACCEL_ZERO[] = {0, 0, 0};
 int ACCEL_ANGLE[] = {0, 0};
 int ORIENTATION[] = {0, 0, 0};
@@ -25,10 +27,10 @@ int RADIO_VALUE[] = { 0, 0, 0, 0, 0, 0};
 int RADIO_ZERO[] = { 0, 0, 0, 0, 0, 0};
 
 // Timing variables
-#define EXPECTED_LOOP_TIME 3
-long loopStartTime = 0;
-int lastLoopTime = EXPECTED_LOOP_TIME;
-int lastLoopUsefulTime = EXPECTED_LOOP_TIME;
+//#define EXPECTED_LOOP_TIME 3
+unsigned long loopStartTime = 0;
+int lastLoopTime = 0;//EXPECTED_LOOP_TIME;
+//int lastLoopUsefulTime = EXPECTED_LOOP_TIME;
 
 
 void setup() {
@@ -50,7 +52,7 @@ void loop() {
   decodeMotorCommands();
   updatePID();
   
-  if(count++>10) {
+  if(count++>20) {
     Serial.print(RADIO_VALUE[0]);
     Serial.print(":");
     Serial.print(RADIO_VALUE[1]);
@@ -63,11 +65,11 @@ void loop() {
     Serial.print(":");
     Serial.print(RADIO_VALUE[5]);
     Serial.print(":");
-    Serial.print(GYRO_ANGLE[0]);
+    Serial.print(int(GYRO_ANGLE[0]));
     Serial.print(":");
-    Serial.print(GYRO_ANGLE[1]);
+    Serial.print(int(GYRO_ANGLE[1]));
     Serial.print(":");
-    Serial.print(GYRO_ANGLE[2]);
+    Serial.print(int(GYRO_ANGLE[2]));
     Serial.print(":");
     Serial.print(ACCEL_ANGLE[0]);
     Serial.print(":");
@@ -83,15 +85,17 @@ void loop() {
     Serial.print(":");
     Serial.print(lastLoopTime);
     Serial.print(":");
-    Serial.println(millis() - loopStartTime);
+    Serial.print(millis() - loopStartTime);
+    Serial.print(":");
+    Serial.println(millis());
     count = 0;
   }
   
   SoftwareServo::refresh();
   
-  lastLoopUsefulTime = millis()-loopStartTime;
-  if(lastLoopUsefulTime<EXPECTED_LOOP_TIME) {
-    delay(EXPECTED_LOOP_TIME-lastLoopUsefulTime);
-  }
+  //lastLoopUsefulTime = millis()-loopStartTime;
+  //if(lastLoopUsefulTime<EXPECTED_LOOP_TIME) {
+    //delay(EXPECTED_LOOP_TIME-lastLoopUsefulTime);
+  //}
   lastLoopTime = millis() - loopStartTime;
 }

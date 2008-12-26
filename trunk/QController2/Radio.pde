@@ -23,11 +23,11 @@ void checkRadio() {
 }
 
 void calibrateRadio() {
-  long calibrationStart = millis();
   for(n=0;n<6;n++) { // Init the array
     RADIO_ZERO[n] = ServoDecode.GetChannelPulseWidth(n+1);
   }
-  while(millis()-calibrationStart<500) { // Do as many samples as we can for 500ms
+  time = millis();
+  while(millis()-time<500) { // Do as many samples as we can for 500ms
     for(n=0;n<6;n++) {
       RADIO_ZERO[n] = (RADIO_ZERO[n] + ServoDecode.GetChannelPulseWidth(n+1)) / 2;
     }

@@ -1,5 +1,5 @@
 
-int lastAccelUpdate = 0;
+unsigned long lastAccelUpdate = 0;
 float degPerSec = 0;
 
 void updateOrientation(int deltaTime) {
@@ -17,17 +17,17 @@ void updateOrientation(int deltaTime) {
   }
   
   // Update bias every 500ms
-  if(millis()-lastAccelUpdate>500 ) {
+  if(millis()-lastAccelUpdate>20 ) {
     updateAccel();
     for(n=0;n<2;n++) {
-      GYRO_BIAS[n] = (GYRO_BIAS[n] + (GYRO_ANGLE[n] - ACCEL_ANGLE[n])) / 2;
+      GYRO_BIAS[n] = (GYRO_BIAS[n]*7 + (GYRO_ANGLE[n] - ACCEL_ANGLE[n])) / 8;
     }
     lastAccelUpdate = millis();
   }
   
   for(n=0;n<3;n++) {
     // YAW BIAS is 0 and therefore the final result is correct
-    ORIENTATION[n] = GYRO_ANGLE[n] - GYRO_BIAS[n];
+    ORIENTATION[n] = int(GYRO_ANGLE[n] - GYRO_BIAS[n]);
     // Make sure the angle is within -512 and 512 quids
     if(ORIENTATION[n]>512) {
       ORIENTATION[n] -= 1024;
