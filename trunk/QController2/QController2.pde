@@ -83,7 +83,7 @@ void loop() {
     Serial.print(":");
     Serial.print(ACCEL_ANGLE[1]);
     Serial.print(":");*/
-    Serial.print(ORIENTATION[0]);
+/*    Serial.print(ORIENTATION[0]);
     Serial.print(":");
     Serial.print(ORIENTATION[1]);
     Serial.print(":");
@@ -101,7 +101,8 @@ void loop() {
     Serial.print(":");
     Serial.print(leftMotor);
     Serial.print(":");
-    Serial.println(rightMotor);
+    Serial.println(rightMotor);*/
+    
 //    Serial.print(":");
 //    Serial.print(ServoDecode.getState());
 //    Serial.print(":");
@@ -112,7 +113,7 @@ void loop() {
 //    Serial.println(millis());
     count = 0;
   }
-  
+ 
   SoftwareServo::refresh();
   
   lastLoopUsefulTime = millis()-loopStartTime;
