@@ -10,12 +10,6 @@
 **
 */
 
-// RADIO command states
-#define RC_NOT_SYNCHED 0
-#define RC_ACQUIRING 1
-#define RC_READY 2
-#define RC_IN_FAILSAFE 3
-
 void checkRadio() {
   while(ServoDecode.getState()!=RC_READY) {
     // TODO: Beeeeep!

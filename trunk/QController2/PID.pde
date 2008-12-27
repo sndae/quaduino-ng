@@ -1,5 +1,5 @@
 
-#define P_GAIN 1.0;
+#define P_GAIN 1.5;
 
 
 float updatePID(int current, int target) { 

@@ -5,6 +5,12 @@
 #include <math.h>
 #include <ServoDecode.h>
 
+// RADIO command states
+#define RC_NOT_SYNCHED 0
+#define RC_ACQUIRING 1
+#define RC_READY 2
+#define RC_IN_FAILSAFE 3
+
 // Index into the orientation value arrays
 #define INDEX_ROLL 0
 #define INDEX_PITCH 1
@@ -54,7 +60,7 @@ void loop() {
   decodeMotorCommands();
   updateMotors();
   
-  if(count++>20) {
+/*  if(count++>20) {
     Serial.print(RADIO_VALUE[0]);
     Serial.print(":");
     Serial.print(RADIO_VALUE[1]);
@@ -105,7 +111,7 @@ void loop() {
     Serial.print(":");
     Serial.println(millis());
     count = 0;
-  }
+  }*/
   
   SoftwareServo::refresh();
   
