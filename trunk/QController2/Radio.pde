@@ -12,6 +12,8 @@
 
 void checkRadio() {
   while(ServoDecode.getState()!=RC_READY) {
+    Serial.println("No radio signal");
+    delay(500);
     // TODO: Beeeeep!
   }
 }

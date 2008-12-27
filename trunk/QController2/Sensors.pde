@@ -33,16 +33,16 @@ void initSensors() {
   ACCEL_ZERO[0] = readInt(ACCEL_ZERO_PITCH_ADDRESS);
   ACCEL_ZERO[1] = readInt(ACCEL_ZERO_ROLL_ADDRESS);
   ACCEL_ZERO[2] = readInt(ACCEL_ZERO_YAW_ADDRESS);
-  Serial.print("Accel Zero from EEPROM: ");
+/*  Serial.print("Accel Zero from EEPROM: ");
   Serial.print(ACCEL_ZERO[0]);
   Serial.print(", ");
   Serial.print(ACCEL_ZERO[1]);
   Serial.print(", ");
   Serial.println(ACCEL_ZERO[2]);
-  Serial.print("Zeroing gyros: ");
+  Serial.print("Zeroing gyros: ");*/
   calibrateGyros();
   zeroGyros();
-  Serial.println("Completed");
+//  Serial.println("Completed");
 }
 
 long outX, outY, outZ;
@@ -75,7 +75,7 @@ void zeroGyros() {
     GYRO_ANGLE[n] = 0;
     GYRO_BIAS[n] = 0;
   }
-  Serial.println("Gyro angles zeroed");
+//  Serial.println("Gyro angles zeroed");
 }
 
 void calibrateGyros() {
@@ -90,13 +90,13 @@ void calibrateGyros() {
   GYRO_ZERO[INDEX_PITCH] /= 32; 
   GYRO_ZERO[INDEX_ROLL] /= 32;
   GYRO_ZERO[INDEX_YAW] /= 32;
-  
+/*  
   Serial.print("Gyro zero calibrated: ");
   Serial.print(GYRO_ZERO[0]);
   Serial.print(", ");
   Serial.print(GYRO_ZERO[1]);
   Serial.print(", ");
-  Serial.println(GYRO_ZERO[2]);
+  Serial.println(GYRO_ZERO[2]);*/
 }
 
 void calibrateAccel() {
