@@ -11,6 +11,10 @@ SoftwareServo motorSouth;
 SoftwareServo motorWest;
 SoftwareServo motorEast;
 boolean motorsRunning;
+int rollCmd = 0;
+int pitchCmd = 0;
+int yawCmd = 0;
+int throttleCmd = 0;
 
 void initMotors() {
   motorNorth.attach(PIN_NORTH); motorNorth.setMinimumPulse(1000); motorNorth.setMaximumPulse(2000);
@@ -23,6 +27,30 @@ void initMotors() {
     SoftwareServo::refresh();
   }
   motorsRunning = false;
+}
+
+void updateMotors() {
+  rollCmd = updatePID(ORIENTATION[INDEX_ROLL], WANTED_ANGLE[INDEX_ROLL]);
+  pitchCmd = updatePID(ORIENTATION[INDEX_PITCH], WANTED_ANGLE[INDEX_PITCH]);
+  yawCmd = updatePID(ORIENTATION[INDEX_YAW], WANTED_ANGLE[INDEX_YAW]);
+  throttleCmd = RADIO_VALUE[2] + RADIO_ZERO[2];
+
+  if(motorsRunning) {
+     // Calculate motor commands
+    frontMotor = constrain(throttleCmd + pitchCmd + yawCmd, LOWCOMMAND, MAXCOMMAND);
+    rearMotor  = constrain(throttleCmd - pitchCmd + yawCmd, LOWCOMMAND, MAXCOMMAND);
+    rightMotor = constrain(throttleCmd - rollCmd - yawCmd, LOWCOMMAND, MAXCOMMAND);
+    leftMotor  = constrain(throttleCmd + rollCmd - yawCmd, LOWCOMMAND, MAXCOMMAND);
+  } else {
+    frontMotor = OFFCOMMAND;
+    rearMotor = OFFCOMMAND;
+    leftMotor = OFFCOMMAND;
+    rightMotor = OFFCOMMAND;
+  }
+  motorNorth.write(frontMotor*0.18);
+  motorSouth.write(rearMotor*0.18);
+  motorWest.write(leftMotor*0.18);
+  motorEast.write(rightMotor*0.18);
 }
 
 void decodeMotorCommands() {

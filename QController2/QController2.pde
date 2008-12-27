@@ -24,6 +24,10 @@ int ORIENTATION[] = {0, 0, 0};
 int RADIO_VALUE[] = { 0, 0, 0, 0, 0, 0};
 int RADIO_ZERO[] = { 0, 0, 0, 0, 0, 0};
 int WANTED_ANGLE[] = {0, 0, 0};
+int frontMotor = 0;
+int rearMotor = 0;
+int leftMotor = 0;
+int rightMotor= 0;
 
 // Timing variables
 #define EXPECTED_LOOP_TIME 3
@@ -48,9 +52,7 @@ void loop() {
   updateOrientation(lastLoopTime);
   updateRadio();
   decodeMotorCommands();
-  updatePID(0.0, 0.0);
-  updatePID(0.0, 0.0);
-  updatePID(0.0, 0.0);
+  updateMotors();
   
   if(count++>20) {
     Serial.print(RADIO_VALUE[0]);
@@ -86,6 +88,14 @@ void loop() {
     Serial.print(WANTED_ANGLE[1]);
     Serial.print(":");
     Serial.print(WANTED_ANGLE[2]);
+    Serial.print(":");
+    Serial.print(frontMotor);
+    Serial.print(":");
+    Serial.print(rearMotor);
+    Serial.print(":");
+    Serial.print(leftMotor);
+    Serial.print(":");
+    Serial.print(rightMotor);
     Serial.print(":");
     Serial.print(ServoDecode.getState());
     Serial.print(":");
