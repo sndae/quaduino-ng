@@ -49,6 +49,7 @@ void setup() {
   initMotors();
   checkRadio();
   calibrateRadio();
+//  Serial.println("Setup completed!");
 }
 
 int count = 0;
@@ -59,9 +60,8 @@ void loop() {
   updateRadio();
   decodeMotorCommands();
   updateMotors();
-  
-/*  if(count++>20) {
-    Serial.print(RADIO_VALUE[0]);
+  if(count++>20) {
+/*    Serial.print(RADIO_VALUE[0]);
     Serial.print(":");
     Serial.print(RADIO_VALUE[1]);
     Serial.print(":");
@@ -82,7 +82,7 @@ void loop() {
     Serial.print(ACCEL_ANGLE[0]);
     Serial.print(":");
     Serial.print(ACCEL_ANGLE[1]);
-    Serial.print(":");
+    Serial.print(":");*/
     Serial.print(ORIENTATION[0]);
     Serial.print(":");
     Serial.print(ORIENTATION[1]);
@@ -101,17 +101,17 @@ void loop() {
     Serial.print(":");
     Serial.print(leftMotor);
     Serial.print(":");
-    Serial.print(rightMotor);
-    Serial.print(":");
-    Serial.print(ServoDecode.getState());
-    Serial.print(":");
-    Serial.print(lastLoopTime);
-    Serial.print(":");
-    Serial.print(millis() - loopStartTime);
-    Serial.print(":");
-    Serial.println(millis());
+    Serial.println(rightMotor);
+//    Serial.print(":");
+//    Serial.print(ServoDecode.getState());
+//    Serial.print(":");
+//    Serial.print(lastLoopTime);
+//    Serial.print(":");
+//    Serial.print(millis() - loopStartTime);
+//    Serial.print(":");
+//    Serial.println(millis());
     count = 0;
-  }*/
+  }
   
   SoftwareServo::refresh();
   
