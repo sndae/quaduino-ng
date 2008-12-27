@@ -37,24 +37,24 @@ void updateMotors() {
 
   if(motorsRunning) {
      // Calculate motor commands
-    frontMotor = constrain(throttleCmd + pitchCmd + yawCmd, LOWCOMMAND, MAXCOMMAND);
-    rearMotor  = constrain(throttleCmd - pitchCmd + yawCmd, LOWCOMMAND, MAXCOMMAND);
-    rightMotor = constrain(throttleCmd - rollCmd - yawCmd, LOWCOMMAND, MAXCOMMAND);
-    leftMotor  = constrain(throttleCmd + rollCmd - yawCmd, LOWCOMMAND, MAXCOMMAND);
+    frontMotor = constrain(throttleCmd - pitchCmd - yawCmd, LOWCOMMAND, MAXCOMMAND);
+    rearMotor  = constrain(throttleCmd + pitchCmd - yawCmd, LOWCOMMAND, MAXCOMMAND);
+    rightMotor = constrain(throttleCmd + rollCmd + yawCmd, LOWCOMMAND, MAXCOMMAND);
+    leftMotor  = constrain(throttleCmd - rollCmd + yawCmd, LOWCOMMAND, MAXCOMMAND);
   } else {
     frontMotor = OFFCOMMAND;
     rearMotor = OFFCOMMAND;
     leftMotor = OFFCOMMAND;
     rightMotor = OFFCOMMAND;
   }
-  motorNorth.write(frontMotor*0.18);
-  motorSouth.write(rearMotor*0.18);
-  motorWest.write(leftMotor*0.18);
-  motorEast.write(rightMotor*0.18);
+  motorNorth.write((frontMotor-OFFCOMMAND)*0.18);
+  motorSouth.write((rearMotor-OFFCOMMAND)*0.18);
+  motorWest.write((leftMotor-OFFCOMMAND)*0.18);
+  motorEast.write((rightMotor-OFFCOMMAND)*0.18);
 }
 
 void decodeMotorCommands() {
-  if(RADIO_VALUE[2] < 210 && ServoDecode.getState()==2) {
+  if(RADIO_VALUE[2] < 210 && ServoDecode.getState()==RC_READY) {
     // Disarm motors(throttle down, yaw left)
     if(RADIO_VALUE[3] < -200 && motorsRunning) {
       commandAllMotors(OFFCOMMAND);
@@ -65,6 +65,7 @@ void decodeMotorCommands() {
     if(RADIO_VALUE[3] > 200 && !motorsRunning) {
       commandAllMotors(LOWCOMMAND);
       motorsRunning = true;
+      WANTED_ANGLE[INDEX_YAW] = ORIENTATION[INDEX_YAW];
     }
 
     // Calibrate gyros (throttle down, yaw left, pitch up)
@@ -87,8 +88,8 @@ void decodeMotorCommands() {
 
 void commandAllMotors(int value) {
   // (180 - 0) / (2000 - 1000) = 0.18
-  motorNorth.write(value*0.18);
-  motorSouth.write(value*0.18);
-  motorWest.write(value*0.18);
-  motorEast.write(value*0.18);
+  motorNorth.write((value-OFFCOMMAND)*0.18);
+  motorSouth.write((value-OFFCOMMAND)*0.18);
+  motorWest.write((value-OFFCOMMAND)*0.18);
+  motorEast.write((value-OFFCOMMAND)*0.18);
 }
