@@ -13,7 +13,6 @@
 // Index variables
 int n, i;
 
-
 // Value arrays
 unsigned int GYRO_ZERO[] = {0, 0, 0};
 int GYRO_RAW[] = {0, 0, 0};
@@ -24,6 +23,7 @@ int ACCEL_ANGLE[] = {0, 0};
 int ORIENTATION[] = {0, 0, 0};
 int RADIO_VALUE[] = { 0, 0, 0, 0, 0, 0};
 int RADIO_ZERO[] = { 0, 0, 0, 0, 0, 0};
+int WANTED_ANGLE[] = {0, 0, 0};
 
 // Timing variables
 #define EXPECTED_LOOP_TIME 3
@@ -39,7 +39,6 @@ void setup() {
   initMotors();
   checkRadio();
   calibrateRadio();
-  initPID();
 }
 
 int count = 0;
@@ -49,9 +48,11 @@ void loop() {
   updateOrientation(lastLoopTime);
   updateRadio();
   decodeMotorCommands();
-  updatePID();
+  updatePID(0.0, 0.0);
+  updatePID(0.0, 0.0);
+  updatePID(0.0, 0.0);
   
-/*  if(count++>20) {
+  if(count++>20) {
     Serial.print(RADIO_VALUE[0]);
     Serial.print(":");
     Serial.print(RADIO_VALUE[1]);
@@ -80,6 +81,12 @@ void loop() {
     Serial.print(":");
     Serial.print(ORIENTATION[2]);
     Serial.print(":");
+    Serial.print(WANTED_ANGLE[0]);
+    Serial.print(":");
+    Serial.print(WANTED_ANGLE[1]);
+    Serial.print(":");
+    Serial.print(WANTED_ANGLE[2]);
+    Serial.print(":");
     Serial.print(ServoDecode.getState());
     Serial.print(":");
     Serial.print(lastLoopTime);
@@ -88,7 +95,7 @@ void loop() {
     Serial.print(":");
     Serial.println(millis());
     count = 0;
-  }*/
+  }
   
   SoftwareServo::refresh();
   

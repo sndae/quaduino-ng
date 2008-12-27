@@ -42,6 +42,17 @@ void updateRadio() {
     for(n=0;n<6;n++) {
       RADIO_VALUE[n] = (((RADIO_VALUE[n]+RADIO_ZERO[n]) + ServoDecode.GetChannelPulseWidth(n+1)) / 2) - RADIO_ZERO[n];
     }
+    
+    // Max stick +-500 = +-512 quids = +-180 degrees
+    // 180/10 = 18 degrees : 500/10
+    // 
+    WANTED_ANGLE[INDEX_ROLL] = RADIO_VALUE[0] / 10;
+    WANTED_ANGLE[INDEX_PITCH] = RADIO_VALUE[1] / 10;
+    WANTED_ANGLE[INDEX_YAW] += RADIO_VALUE[3] / 100;
+    // Correct for yaw wrap around
+    if(WANTED_ANGLE[INDEX_YAW]>512) WANTED_ANGLE[INDEX_YAW]-=1024;
+    if(WANTED_ANGLE[INDEX_YAW]<-512) WANTED_ANGLE[INDEX_YAW]+=1024;
+    
     lastRcUpdate = millis();
   }
 }
