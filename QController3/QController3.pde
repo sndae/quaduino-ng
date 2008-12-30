@@ -45,6 +45,7 @@ int rcZero[] = { 0, 0, 0, 0, 0, 0};
 
 // Gyro data - Order: PITCH, ROLL, YAW
 unsigned int gyroZero[] = { 0, 0, 0 };
+int gyroValueOld[] = { 0, 0, 0 };
 int gyroValue[] = { 0, 0, 0 };
 int gyroRaw[] = { 0, 0, 0 };
 int gyroSum[] = { 0, 0, 0 };
@@ -54,11 +55,11 @@ int gyroIntegralLimit[] = { 3840, 3840, 1024 };
 int accelCorrection[] = { 0, 0, 0 }; // Rp / Np / (none)
 
 // PID
-int pGain[]Ê= { 1, 1, 1 };
-int iGain[] = { 0, 0, 0 };
+int pGain[]Ê= { 26, 26, 16 };
+int iGain[] = { 5, 5, 30 };
 int dGain[] = { 0, 0, 0 };
 int pidCmd[] = { 0, 0, 0 };
-int oldPidCmd[] = { 0, 0, 0 };
+
 
 // Temp and index variables
 unsigned long tempTime;
