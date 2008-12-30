@@ -49,11 +49,12 @@ void updateRadio() {
       // rcValue = (oldValue*3 + newValue)/4
       // rcValue is centered around 0 and mapped to the range <-128,127>
       // Must do real div 4 to keep sign bit correct
-      rcValue[n] = (rcValue[n]*3 + ((ServoDecode.GetChannelPulseWidth(n+1) - rcZero[n]) >> 2)) / 4;
+      if(speccy && (n==0 || n==1 || n==3)) {
+        rcValue[n] = (rcValue[n]*3 + ((ServoDecode.GetChannelPulseWidth(n+1) - rcZero[n]) >> 3)) / 4;
+      } else {
+        rcValue[n] = (rcValue[n]*3 + ((ServoDecode.GetChannelPulseWidth(n+1) - rcZero[n]) >> 2)) / 4;
+      }
     }
-    rcValue[0] /= 2;
-    rcValue[1] /= 2;
-    rcValue[3] /= 2;
     lastRcUpdate = millis();
     checkRadioCommands();
   }

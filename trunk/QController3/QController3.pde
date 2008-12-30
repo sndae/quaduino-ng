@@ -42,6 +42,7 @@ boolean flying = false;
 // Radio Channel data (Roll, Pitch, Throttle, Yaw, Gear, Aux)
 int rcValue[] = { 0, 0, 0, 0, 0, 0};
 int rcZero[] = { 0, 0, 0, 0, 0, 0};
+boolean speccy = true;
 
 // Gyro data - Order: PITCH, ROLL, YAW
 unsigned int gyroZero[] = { 0, 0, 0 };
@@ -49,14 +50,14 @@ int gyroValueOld[] = { 0, 0, 0 };
 int gyroValue[] = { 0, 0, 0 };
 int gyroRaw[] = { 0, 0, 0 };
 int gyroSum[] = { 0, 0, 0 };
-int gyroIntegralLimit[] = { 3840, 3840, 1024 };
+int gyroIntegralLimit[] = { 2000, 2000, 1000 };
 
 // Accel data - Order PITCH, ROLL, YAW(none)
 int accelCorrection[] = { 0, 0, 0 }; // Rp / Np / (none)
 
 // PID
-int pGain[]Ê= { 26, 26, 16 };
-int iGain[] = { 0, 0, 0 }; // 5, 5, 30
+int pGain[]Ê= { 20, 20, 10 };
+int iGain[] = { 4, 4, 2 }; // 5, 5, 30
 int dGain[] = { 0, 0, 0 };
 int pidCmd[] = { 0, 0, 0 };
 
@@ -75,6 +76,7 @@ unsigned int loopCount = 0;
 
 void setup() {
   Serial.begin(57600);
+  helloWorld();
   setupRadio();
   setupMotors();
   calibrateGyros();
@@ -99,7 +101,8 @@ void loop () {
   SoftwareServo::refresh();
  
  
- /* if(loopCount%20==0) {
+  if(loopCount%20==0) {
+    millis()-loopStartTime;
     Serial.print(rcValue[0]);
     Serial.print(":");
     Serial.print(rcValue[1]);
@@ -116,17 +119,19 @@ void loop () {
     for(n=0;n<4;n++) {
       Serial.print(motor[n]);
       Serial.print(":");
-//      Serial.print(gyroRaw[n]);
-//      Serial.print(":");
-//      Serial.print(gyroValue[n]);
-//      Serial.print(":");
-//      Serial.print(gyroSum[n]);
-//      Serial.print(":");
+    }
+    for(n=0;n<3;n++) {
+      Serial.print(gyroValue[n]);
+      Serial.print(":");
+      Serial.print(gyroSum[n]);
+      Serial.print(":");
     }
     Serial.print(flying);
     Serial.print(":");
+    Serial.print(tempTime);
+    Serial.print("/");
     Serial.println(millis()-loopStartTime);
-  }*/
+  }
   
   tempTime = millis()-loopStartTime;
   if(tempTime<EXPECTED_LOOP_TIME) {

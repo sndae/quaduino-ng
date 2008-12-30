@@ -33,16 +33,17 @@ void calibrateGyros() {
     } else {
       gyroZero[n%3] += analogRead(n%3);
       if((n/3)>31) {
+        gyroZero[n%3] += 16;
         gyroZero[n%3] /= 32;
       }
     }
   }
-  Serial.print("Gyro zero calibrated: ");
+/*  Serial.print("Gyro zero calibrated: ");
   Serial.print(gyroZero[0]);
   Serial.print(", ");
   Serial.print(gyroZero[1]);
   Serial.print(", ");
-  Serial.println(gyroZero[2]);
+  Serial.println(gyroZero[2]);*/
 }
 
 
@@ -50,12 +51,19 @@ void updateGyros() {
   for(n=0;n<3;n++) {
     gyroRaw[n] = analogRead(n) - gyroZero[n];
     if(abs(gyroRaw[n])<5) gyroRaw[n] = 0;
-    gyroSum[n] += (gyroRaw[n]/2);
+ 
+    gyroValue[n] = (gyroRaw[n]+2) / 4;
+ 
+    gyroSum[n] += (gyroRaw[n]+1/2);
     if(gyroSum[n]>gyroIntegralLimit[n]) {
       gyroSum[n] = gyroIntegralLimit[n];
     } else if(gyroSum[n]<-gyroIntegralLimit[n]) {
       gyroSum[n] = -gyroIntegralLimit[n];
     }
-    gyroValue[n] = gyroRaw[n]/4;
+    if(n<2) { // For pitch and roll
+      if(gyroSum[n]>0) gyroSum[n]--;
+      if(gyroSum[n]<0) gyroSum[n]++;
+    }
+ 
   }
 }

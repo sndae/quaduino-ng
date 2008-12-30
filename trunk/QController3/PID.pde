@@ -22,7 +22,7 @@ void updatePID() {
     
     // RC Signal
     switch(n) {
-      case 0: pidCmd[n] -= rcValue[1] ; break; // PITCH
+      case 0: pidCmd[n] -= rcValue[1]; break; // PITCH
       case 1: pidCmd[n] -= rcValue[0]; break; // ROLL
       case 2: pidCmd[n] -= rcValue[3]; break; // YAW
     }
