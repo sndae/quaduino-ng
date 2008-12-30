@@ -1,5 +1,9 @@
 
-
+void clearPID() {
+    for(n=0;n<3;n++) {
+      pidCmd[n] = 0;
+    }
+}
 
 void updatePID() {
   for(n=0;n<3;n++) {

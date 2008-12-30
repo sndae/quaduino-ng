@@ -29,6 +29,7 @@ void calibrateGyros() {
       gyroRaw[n] = 0;
       gyroSum[n] = 0;
       gyroZero[n] = 0;
+      gyroValueOld[n] = 0;
     } else {
       gyroZero[n%3] += analogRead(n%3);
       if((n/3)>31) {
