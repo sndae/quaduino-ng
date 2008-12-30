@@ -32,7 +32,7 @@ void updateMotors() {
   motor[3] = rcValue[2] - pidCmd[1]  + pidCmd[2];
   
   for(n=0;n<4;n++) {
-    motor[n] = constrain(motor[n], 15, 255);
+    motor[n] = constrain(motor[n], 25, 255);
   }
   
   commandMotors(motor[0], motor[1], motor[2], motor[3]);

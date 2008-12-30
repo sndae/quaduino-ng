@@ -56,7 +56,7 @@ int accelCorrection[] = { 0, 0, 0 }; // Rp / Np / (none)
 
 // PID
 int pGain[]Ê= { 26, 26, 16 };
-int iGain[] = { 5, 5, 30 };
+int iGain[] = { 0, 0, 0 }; // 5, 5, 30
 int dGain[] = { 0, 0, 0 };
 int pidCmd[] = { 0, 0, 0 };
 
@@ -98,6 +98,7 @@ void loop () {
   
   SoftwareServo::refresh();
  
+ /*
   if(loopCount%20==0) {
     Serial.print(rcValue[0]);
     Serial.print(":");
@@ -115,17 +116,19 @@ void loop () {
     for(n=0;n<4;n++) {
       Serial.print(motor[n]);
       Serial.print(":");
-/*      Serial.print(gyroRaw[n]);
-      Serial.print(":");
-      Serial.print(gyroValue[n]);
-      Serial.print(":");
-      Serial.print(gyroSum[n]);
-      Serial.print(":");*/
+//      Serial.print(gyroRaw[n]);
+//      Serial.print(":");
+//      Serial.print(gyroValue[n]);
+//      Serial.print(":");
+//      Serial.print(gyroSum[n]);
+//      Serial.print(":");
     }
     Serial.print(flying);
     Serial.print(":");
     Serial.println(millis()-loopStartTime);
   }
+  */
+  
   tempTime = millis()-loopStartTime;
   if(tempTime<EXPECTED_LOOP_TIME) {
     delay(EXPECTED_LOOP_TIME-tempTime);
