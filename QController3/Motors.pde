@@ -8,8 +8,6 @@
 
 SoftwareServo motorFront, motorRear, motorLeft, motorRight;
 int frontCmd, rearCmd, leftCmd, rightCmd;
-boolean motorsRunning;
-
 
 void setupMotors() {
   motorFront.attach(PIN_FRONT); motorFront.setMinimumPulse(MIN_COMMAND); motorFront.setMaximumPulse(MAX_COMMAND);
@@ -21,7 +19,6 @@ void setupMotors() {
   while(millis()<(tempTime+4000)) { // Wait 4000ms to allow the ESCs to arm
     SoftwareServo::refresh();
   }
-  motorsRunning = false;
 }
 
 void updateMotors() {
@@ -32,7 +29,7 @@ void updateMotors() {
   motor[3] = rcValue[2] - pidCmd[1]  + pidCmd[2];
   
   for(n=0;n<4;n++) {
-    motor[n] = constrain(motor[n], 25, 255);
+    motor[n] = constrain(motor[n], 50, 255);
   }
   
   commandMotors(motor[0], motor[1], motor[2], motor[3]);
