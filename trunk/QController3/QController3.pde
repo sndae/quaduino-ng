@@ -12,11 +12,11 @@
 // loop:
 //   Read Gyros
 //     Use current value for PD
-//     Sum up Gyro valus for I
+//     Sum up Gyro values for I
 //   Read Accelerometers every 20ms
 //     Calculate correction for I
 //   Read Radio every 20ms
-//     Substract the radio signal from the gyro PD values
+//     Subtract the radio signal from the gyro PD values
 //   Feed everything into PID
 //   Take PID commands and mix with Radio throttle for each motor
 //   goto loop
