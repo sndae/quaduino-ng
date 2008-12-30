@@ -94,6 +94,8 @@ void loop () {
     calibrateGyros();
     processSerial();
   }
+  
+  SoftwareServo::refresh();
  
   if(loopCount%20==0) {
     Serial.print(rcValue[0]);
@@ -134,5 +136,6 @@ void wait(int ms) {
   tempTime = millis();
   while(millis()-tempTime<ms) {
     processSerial();
+    SoftwareServo::refresh();
   }
 }
