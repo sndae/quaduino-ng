@@ -24,13 +24,16 @@
 #define PIN_GYRO_YAW 2
 
 void calibrateGyros() {
-  for(n=0;n<3*128;n++) {
-    if(n<4) {
+  for(n=0;n<33*3;n++) {
+    if(n<3) {
       gyroRaw[n] = 0;
       gyroSum[n] = 0;
-      gyroZero[n] = analogRead(n);
+      gyroZero[n] = 0;
     } else {
-      gyroZero[n%3] = (gyroZero[n%3]*7 + analogRead(n%3)) / 8;
+      gyroZero[n%3] += analogRead(n%3);
+      if((n/3)>31) {
+        gyroZero[n%3] /= 32;
+      }
     }
   }
   Serial.print("Gyro zero calibrated: ");
@@ -44,15 +47,14 @@ void calibrateGyros() {
 
 void updateGyros() {
   for(n=0;n<3;n++) {
-    gyroRaw[n] = (analogRead(n) + analogRead(n)) >> 1;
-    gyroRaw[n] -= gyroZero[n];
-    if(abs(gyroRaw[n])<4) gyroRaw[n] = 0;
+    gyroRaw[n] = analogRead(n) - gyroZero[n];
+    if(abs(gyroRaw[n])<5) gyroRaw[n] = 0;
     gyroSum[n] += (gyroRaw[n]/2);
     if(gyroSum[n]>gyroIntegralLimit[n]) {
       gyroSum[n] = gyroIntegralLimit[n];
     } else if(gyroSum[n]<-gyroIntegralLimit[n]) {
       gyroSum[n] = -gyroIntegralLimit[n];
     }
-    gyroRaw[n] /=4;
+    gyroValue[n] = gyroRaw[n]/4;
   }
 }
