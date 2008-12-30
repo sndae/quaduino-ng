@@ -60,6 +60,8 @@ int iGain[] = { 5, 5, 30 };
 int dGain[] = { 0, 0, 0 };
 int pidCmd[] = { 0, 0, 0 };
 
+int motor[] = { 0, 0, 0, 0 };
+
 
 // Temp and index variables
 unsigned long tempTime;
@@ -73,6 +75,7 @@ unsigned int loopCount = 0;
 void setup() {
   Serial.begin(57600);
   setupRadio();
+  setupMotors();
   calibrateGyros();
 }
 
@@ -86,6 +89,7 @@ void loop () {
   flying = true;
   if(flying) {  
     updatePID();
+    updateMotors();
   } else {
     calibrateGyros();
     processSerial();
@@ -103,8 +107,8 @@ void loop () {
     Serial.print(rcValue[4]);
     Serial.print(":");
     Serial.println(rcValue[5]);*/
-    for(n=0;n<3;n++) {
-      Serial.print(pidCmd[n]);
+    for(n=0;n<4;n++) {
+      Serial.print(motor[n]);
       Serial.print(":");
 /*      Serial.print(gyroRaw[n]);
       Serial.print(":");
