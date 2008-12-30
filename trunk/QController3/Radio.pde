@@ -51,6 +51,9 @@ void updateRadio() {
       // Must do real div 4 to keep sign bit correct
       rcValue[n] = (rcValue[n]*3 + ((ServoDecode.GetChannelPulseWidth(n+1) - rcZero[n]) >> 2)) / 4;
     }
+    rcValue[0] /= 2;
+    rcValue[1] /= 2;
+    rcValue[3] /= 2;
     lastRcUpdate = millis();
     checkRadioCommands();
   }
