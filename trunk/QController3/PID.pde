@@ -5,7 +5,7 @@ void updatePID() {
   for(n=0;n<3;n++) {
     // PD
     pidCmd[n] = -gyroValue[n];
-    pidCmd[n] += oldPidCmd[n];
+    pidCmd[n] += gyroValueOld[n];
     pidCmd[n] *= dGain[n];
     pidCmd[n] += (gyroValue[n]*pGain[n]);
     pidCmd[n] += 8;
@@ -14,7 +14,7 @@ void updatePID() {
     pidCmd[n] += accelCorrection[n]; // Acceleration sensor correction
 
     // I
-    pidCmd[n] += (((gyroSum[n]*iGain[n])+128) >> 8);
+    pidCmd[n] += (((gyroSum[n]*iGain[n])+128) / 256);
     
     // RC Signal
     switch(n) {
@@ -23,6 +23,6 @@ void updatePID() {
       case 2: pidCmd[n] -= rcValue[3]; break; // YAW
     }
         
-    oldPidCmd[n] = pidCmd[n];
+    gyroValueOld[n] = gyroValue[n];
   }
 }
