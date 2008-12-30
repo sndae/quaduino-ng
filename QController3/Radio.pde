@@ -52,5 +52,19 @@ void updateRadio() {
       rcValue[n] = (rcValue[n]*3 + ((ServoDecode.GetChannelPulseWidth(n+1) - rcZero[n]) >> 2)) / 4;
     }
     lastRcUpdate = millis();
+    checkRadioCommands();
+  }
+}
+
+void checkRadioCommands() {
+  if(!flying && rcValue[2]<15) {
+    if(rcValue[3]>25) {
+      flying = true;
+    }
+  } else if(flying && rcValue[2]<15) {
+    if(rcValue[3]<-25) {
+      flying = false;
+      for(n=0;n<4;n++) motor[n] = 0; // Not needed, but good for debugging
+    }
   }
 }

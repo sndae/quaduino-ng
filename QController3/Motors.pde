@@ -32,13 +32,17 @@ void updateMotors() {
   motor[2] = rcValue[2] + pidCmd[1]  + pidCmd[2];
   motor[3] = rcValue[2] - pidCmd[1]  + pidCmd[2];
   
+  for(n=0;n<4;n++) {
+    motor[n] = constrain(motor[n], 15, 255);
+  }
+  
   commandMotors(motor[0], motor[1], motor[2], motor[3]);
 }
 
 void commandMotors(int front, int rear, int left, int right) {
-  // (180 - 0) / (2000 - 1000) = 0.18
-  motorFront.write((front-MIN_COMMAND)*0.18);
-  motorRear.write((rear-MIN_COMMAND)*0.18);
-  motorLeft.write((left-MIN_COMMAND)*0.18);
-  motorRight.write((right-MIN_COMMAND)*0.18);
+  // (180 - 0) / (255 - 0) = 0.7058, 141 / 200
+  motorFront.write((front * 141) / 200);
+  motorRear.write(  (rear * 141) / 200);
+  motorLeft.write(  (left * 141) / 200);
+  motorRight.write((right * 141) / 200);
 }

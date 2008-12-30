@@ -60,6 +60,7 @@ int iGain[] = { 5, 5, 30 };
 int dGain[] = { 0, 0, 0 };
 int pidCmd[] = { 0, 0, 0 };
 
+// Motor
 int motor[] = { 0, 0, 0, 0 };
 
 
@@ -86,7 +87,6 @@ void loop () {
   updateRadio();
   updateGyros();
 
-  flying = true;
   if(flying) {  
     updatePID();
     updateMotors();
@@ -96,7 +96,7 @@ void loop () {
   }
  
   if(loopCount%20==0) {
-/*    Serial.print(rcValue[0]);
+    Serial.print(rcValue[0]);
     Serial.print(":");
     Serial.print(rcValue[1]);
     Serial.print(":");
@@ -106,7 +106,9 @@ void loop () {
     Serial.print(":");
     Serial.print(rcValue[4]);
     Serial.print(":");
-    Serial.println(rcValue[5]);*/
+    Serial.print(rcValue[5]);
+    Serial.print(":");
+    Serial.print(":");
     for(n=0;n<4;n++) {
       Serial.print(motor[n]);
       Serial.print(":");
@@ -117,6 +119,8 @@ void loop () {
       Serial.print(gyroSum[n]);
       Serial.print(":");*/
     }
+    Serial.print(flying);
+    Serial.print(":");
     Serial.println(millis()-loopStartTime);
   }
   tempTime = millis()-loopStartTime;
