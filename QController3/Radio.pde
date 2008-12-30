@@ -64,7 +64,8 @@ void checkRadioCommands() {
   } else if(flying && rcValue[2]<15) {
     if(rcValue[3]<-25) {
       flying = false;
-      for(n=0;n<4;n++) motor[n] = 0; // Not needed, but good for debugging
+      for(n=0;n<4;n++) motor[n] = 0;
+      commandMotors(motor[0], motor[1], motor[2], motor[3]);
     }
   }
 }

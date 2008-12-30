@@ -4,7 +4,6 @@
 #define PIN_LEFT 6
 #define PIN_RIGHT 7
 #define MIN_COMMAND 1000
-#define LOW_COMMAND 1100
 #define MAX_COMMAND 2000
 
 SoftwareServo motorFront, motorRear, motorLeft, motorRight;
@@ -17,7 +16,7 @@ void setupMotors() {
   motorRear.attach(PIN_REAR); motorRear.setMinimumPulse(MIN_COMMAND); motorRear.setMaximumPulse(MAX_COMMAND);
   motorLeft.attach(PIN_LEFT); motorLeft.setMinimumPulse(MIN_COMMAND); motorLeft.setMaximumPulse(MAX_COMMAND);
   motorRight.attach(PIN_RIGHT); motorRight.setMinimumPulse(MIN_COMMAND); motorRight.setMaximumPulse(MAX_COMMAND);
-  commandMotors(LOW_COMMAND, LOW_COMMAND, LOW_COMMAND, LOW_COMMAND);
+  commandMotors(MIN_COMMAND, MIN_COMMAND, MIN_COMMAND, MIN_COMMAND);
   tempTime = millis();
   while(millis()<(tempTime+4000)) { // Wait 4000ms to allow the ESCs to arm
     SoftwareServo::refresh();
@@ -26,7 +25,7 @@ void setupMotors() {
 }
 
 void updateMotors() {
-
+  
   motor[0] = rcValue[2] - pidCmd[0]  - pidCmd[2];
   motor[1] = rcValue[2] + pidCmd[0]  - pidCmd[2];
   motor[2] = rcValue[2] + pidCmd[1]  + pidCmd[2];

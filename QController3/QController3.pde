@@ -91,6 +91,7 @@ void loop () {
     updatePID();
     updateMotors();
   } else {
+    clearPID();
     calibrateGyros();
     processSerial();
   }
