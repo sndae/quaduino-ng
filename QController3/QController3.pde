@@ -98,8 +98,8 @@ void loop () {
   
   SoftwareServo::refresh();
  
- /*
-  if(loopCount%20==0) {
+ 
+ /* if(loopCount%20==0) {
     Serial.print(rcValue[0]);
     Serial.print(":");
     Serial.print(rcValue[1]);
@@ -126,8 +126,7 @@ void loop () {
     Serial.print(flying);
     Serial.print(":");
     Serial.println(millis()-loopStartTime);
-  }
-  */
+  }*/
   
   tempTime = millis()-loopStartTime;
   if(tempTime<EXPECTED_LOOP_TIME) {
