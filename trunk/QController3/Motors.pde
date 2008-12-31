@@ -14,7 +14,7 @@ void setupMotors() {
   motorRear.attach(PIN_REAR); motorRear.setMinimumPulse(MIN_COMMAND); motorRear.setMaximumPulse(MAX_COMMAND);
   motorLeft.attach(PIN_LEFT); motorLeft.setMinimumPulse(MIN_COMMAND); motorLeft.setMaximumPulse(MAX_COMMAND);
   motorRight.attach(PIN_RIGHT); motorRight.setMinimumPulse(MIN_COMMAND); motorRight.setMaximumPulse(MAX_COMMAND);
-  commandMotors(MIN_COMMAND, MIN_COMMAND, MIN_COMMAND, MIN_COMMAND);
+  commandMotors(0, 0, 0, 0);
   tempTime = millis();
   while(millis()<(tempTime+8000)) { // Wait 4000ms to allow the ESCs to arm
     SoftwareServo::refresh();
