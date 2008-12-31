@@ -50,17 +50,18 @@ void calibrateGyros() {
 void updateGyros() {
   for(n=0;n<3;n++) {
     gyroRaw[n] = analogRead(n) - gyroZero[n];
-    if(abs(gyroRaw[n])<5) gyroRaw[n] = 0;
- 
+    if(n==2 && abs(gyroRaw[n])<5) { // No auto zeroing for yaw, so remove more noise
+      gyroRaw[n] = 0;
+    }
     gyroValue[n] = (gyroRaw[n]+2) / 4;
  
-    gyroSum[n] += (gyroRaw[n]+1/2);
+    gyroSum[n] += ((gyroRaw[n]+1) / 2);
     if(gyroSum[n]>gyroIntegralLimit[n]) {
       gyroSum[n] = gyroIntegralLimit[n];
     } else if(gyroSum[n]<-gyroIntegralLimit[n]) {
       gyroSum[n] = -gyroIntegralLimit[n];
     }
-    if(n<2) { // For pitch and roll
+    if(n<2) { // Auto zeroing for pitch and roll
       if(gyroSum[n]>0) gyroSum[n]--;
       if(gyroSum[n]<0) gyroSum[n]++;
     }

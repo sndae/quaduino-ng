@@ -16,8 +16,11 @@ void setupMotors() {
   motorRight.attach(PIN_RIGHT); motorRight.setMinimumPulse(MIN_COMMAND); motorRight.setMaximumPulse(MAX_COMMAND);
   commandMotors(MIN_COMMAND, MIN_COMMAND, MIN_COMMAND, MIN_COMMAND);
   tempTime = millis();
-  while(millis()<(tempTime+4000)) { // Wait 4000ms to allow the ESCs to arm
+  while(millis()<(tempTime+8000)) { // Wait 4000ms to allow the ESCs to arm
     SoftwareServo::refresh();
+#ifdef debug
+    if(millis()%1000==0) Serial.println(millis()-tempTime);
+#endif
   }
 }
 
@@ -29,7 +32,7 @@ void updateMotors() {
   motor[3] = rcValue[2] - pidCmd[1]  + pidCmd[2];
   
   for(n=0;n<4;n++) {
-    motor[n] = constrain(motor[n], 50, 255);
+    motor[n] = constrain(motor[n], 30, 255);
   }
   
   commandMotors(motor[0], motor[1], motor[2], motor[3]);
