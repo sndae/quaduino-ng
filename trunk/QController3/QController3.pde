@@ -29,6 +29,8 @@
 #include <math.h>
 #include <ServoDecode.h>
 
+//#define debug
+
 // RADIO command states
 #define RC_UNSYNCHED 0
 #define RC_ACQUIRING 1
@@ -50,15 +52,15 @@ int gyroValueOld[] = { 0, 0, 0 };
 int gyroValue[] = { 0, 0, 0 };
 int gyroRaw[] = { 0, 0, 0 };
 int gyroSum[] = { 0, 0, 0 };
-int gyroIntegralLimit[] = { 2000, 2000, 1000 };
+int gyroIntegralLimit[] = { 1000, 1000, 500 };
 
 // Accel data - Order PITCH, ROLL, YAW(none)
 int accelCorrection[] = { 0, 0, 0 }; // Rp / Np / (none)
 
 // PID
-int pGain[]Ê= { 20, 20, 10 };
-int iGain[] = { 4, 4, 2 }; // 5, 5, 30
-int dGain[] = { 0, 0, 0 };
+int pGain[]Ê= { 18, 18, 20 };
+int iGain[] = { 0, 0, 0 }; // 5, 5, 30
+int dGain[] = { -9, -9, -10 };
 int pidCmd[] = { 0, 0, 0 };
 
 // Motor
@@ -100,7 +102,7 @@ void loop () {
   
   SoftwareServo::refresh();
  
- 
+ #ifdef debug
   if(loopCount%20==0) {
     millis()-loopStartTime;
     Serial.print(rcValue[0]);
@@ -132,6 +134,7 @@ void loop () {
     Serial.print("/");
     Serial.println(millis()-loopStartTime);
   }
+#endif
   
   tempTime = millis()-loopStartTime;
   if(tempTime<EXPECTED_LOOP_TIME) {
