@@ -58,9 +58,9 @@ int gyroIntegralLimit[] = { 1000, 1000, 500 };
 int accelCorrection[] = { 0, 0, 0 }; // Rp / Np / (none)
 
 // PID
-int pGain[]Ê= { 18, 18, 20 };
-int iGain[] = { 0, 0, 0 }; // 5, 5, 30
-int dGain[] = { -9, -9, -10 };
+int pGain[]Ê= { 5, 5, 5 };
+int iGain[] = { 0, 0, 0 };
+int dGain[] = { -2, -2, -2 };
 int pidCmd[] = { 0, 0, 0 };
 
 // Motor
