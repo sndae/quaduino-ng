@@ -11,7 +11,12 @@ void updatePID() {
     pidCmd[n] = -gyroValue[n];
     pidCmd[n] += gyroValueOld[n];
     pidCmd[n] *= dGain[n];
-    pidCmd[n] += (gyroValue[n]*pGain[n]);
+//    pidCmd[n] += (gyroValue[n]*pGain[n]);
+    switch(n) {
+      case 0: pidCmd[n] += ((gyroValue[n] - rcValue[1])*pGain[n]); break;
+      case 1: pidCmd[n] += ((gyroValue[n] - rcValue[0])*pGain[n]); break;
+      case 2: pidCmd[n] += ((gyroValue[n] - rcValue[3])*pGain[n]); break;
+    }
     pidCmd[n] += 8;
     pidCmd[n] /= 16;
 
