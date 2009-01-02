@@ -29,7 +29,7 @@
 #include <math.h>
 #include <ServoDecode.h>
 
-#define debug
+//#define debug
 
 // RADIO command states
 #define RC_UNSYNCHED 0
@@ -58,9 +58,9 @@ int gyroIntegralLimit[] = { 1000, 1000, 500 };
 int accelCorrection[] = { 0, 0, 0 }; // Rp / Np / (none)
 
 // PID
-int pGain[]Ê= { 20, 20, 20 };
+int pGain[]Ê= { 30, 30, 30 };
 int iGain[] = { 0, 0, 0 };
-int dGain[] = { 0, 0, 0 };
+int dGain[] = { -15, -15, -15 };
 int pidCmd[] = { 0, 0, 0 };
 
 // Motor
