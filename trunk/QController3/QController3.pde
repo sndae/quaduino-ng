@@ -29,7 +29,7 @@
 #include <math.h>
 #include <ServoDecode.h>
 
-#define debug
+//#define debug
 
 // RC command states
 #define RC_NOT_SYNCHED 0
@@ -57,21 +57,6 @@ int motor[] = { 0, 0, 0, 0 };
 //int iGain[] = { 0, 0, 0 };
 //int dGain[] = { -15, -15, -15 };
 int pidCmd[] = { 0, 0, 0 };
-
-// PID Values
-/*#define WINDUP_GUARD_GAIN 100.0
-float pGain = 1.8; // 2.0
-float iGain = 0.0;
-float dGain = -1.5;
-
-float pTerm, iTerm, dTerm;
-float iRollState = 0;
-float lastRollPosition = 0;
-float iPitchState = 0;
-float lastPitchPosition = 0;
-float iYawState = 0;
-float lastYawPosition = 0;*/
-
 
 // State
 boolean flying = false;
