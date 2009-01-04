@@ -123,18 +123,18 @@ void updateAccels() {
     for(n=0;n<3;n++) {
       accelSum[n] += accelValue[n];
     }
-//    accelSum[2] -= 1016; // 1024 , Subtract 1g
     
+    
+    // Altitude stabilization
     if(((((accelSum[2] + 8) / 16) * accelUpDownMix) + 128) / 256 > accelAltStab) {
       accelAltStab++;
     } else {
       accelAltStab--;
     }
-    
     accelAltStab = constrain(accelAltStab, -100, 100);
-    
     if(accelSum[2] > 10) accelSum[2] -= 10;
     if(accelSum[2] < -10) accelSum[2] += 10;
+    
     
     lastAccelsUpdate = millis();
   }
