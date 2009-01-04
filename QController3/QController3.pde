@@ -48,6 +48,13 @@ int gyroRateOld[] = { 0, 0, 0};
 int gyroRate[] = { 0, 0, 0 };
 int gyroSum[] = { 0, 0, 0 };
 
+// Accel data
+#define accelUpDownMix -200
+long accelZero[] = { 0, 0, 0 };
+long accelValue[] = { 0, 0, 0 };
+int accelSum[] = { 0, 0, 0 };
+int accelAltStab = 0;
+
 
 // Motors
 int motor[] = { 0, 0, 0, 0 };
@@ -66,14 +73,15 @@ unsigned long tempTime;
 int n, i;
 
 // Timing
-long previousTime = 0;
-long currentTime = 0;
-long deltaTime = 0;
+unsigned long previousTime = 0;
+unsigned long currentTime = 0;
+unsigned int deltaTime = 0;
 
 void setup() {
   Serial.begin(57600);
   setupRadio();
   setupMotors();
+  setupAccel();
   calibrateGyros();
   previousTime = millis();
 }
@@ -83,11 +91,12 @@ int loopCount = 0;
 void loop() {
   // Measure loop rate
   currentTime = millis();
-  deltaTime = currentTime - previousTime;
+  deltaTime = (int) (currentTime - previousTime);
   previousTime = currentTime;
   
   updateRadio();
   updateGyros();
+  updateAccels();
   updatePID();
   updateMotors();
 
@@ -113,8 +122,12 @@ void loop() {
       Serial.print(":");
       Serial.print(gyroSum[n]);
       Serial.print(":");
+      Serial.print(accelValue[n]);
+      Serial.print(":");
     }
-    Serial.print(flying?1:0);
+    Serial.print(accelAltStab);
+    Serial.print(":");
+    Serial.print(flying?"flying":"ground");
     Serial.print(":");
     Serial.println(deltaTime);
   }

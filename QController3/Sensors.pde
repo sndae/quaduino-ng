@@ -23,6 +23,8 @@
 #define PIN_GYRO_ROLL 1
 #define PIN_GYRO_YAW 2
 
+unsigned long lastAccelsUpdate = 0;
+
 
 void calibrateGyros() {
   for(n=0;n<33*3;n++) {
@@ -66,3 +68,92 @@ void updateGyros() {
     }
   }
 }
+
+
+void setupAccel() {
+   // Join I2C BUS as master
+  Wire.begin();
+  // Initialize the LIS3LV02DQ
+  i2cSend(0x1d, 0x21, 0b01000000); // CTRL_REG2 = +-2g, BDU=1, i2c
+  i2cSend(0x1d, 0x20, 0b11010111); // CTRL_REG1 = 2560Hz, Decimate by 128, enable all axis's
+  // Read previously calibrated zero point for accelerometers
+  accelZero[0] = readInt(ACCEL_ZERO_PITCH_ADDRESS);
+  accelZero[2] = readInt(ACCEL_ZERO_ROLL_ADDRESS);
+  accelZero[1] = readInt(ACCEL_ZERO_YAW_ADDRESS);
+#ifdef debug
+  Serial.print("Read accelZero from EEPROM: ");
+  Serial.print(accelZero[0]);
+  Serial.print(", ");
+  Serial.print(accelZero[2]);
+  Serial.print(", ");
+  Serial.println(accelZero[1]);
+#endif
+}
+
+void calibrateAccel() {
+  accelZero[0] = i2cReadAccel(0x28);
+  accelZero[2] = i2cReadAccel(0x2a);
+  accelZero[1] = i2cReadAccel(0x2c);
+  for(n=0;n<100;n++) {
+    accelZero[0] = (accelZero[0]*7 + i2cReadAccel(0x28)) / 8;
+    accelZero[2] = (accelZero[2]*7 + i2cReadAccel(0x2a)) / 8;
+    accelZero[1] = (accelZero[1]*7 + i2cReadAccel(0x2c)) / 8;
+  }
+//  accelZero[2] -= 1024; // Subtract gravity on Y-axis
+    // Write values to EEPROM
+  writeInt(accelZero[0], ACCEL_ZERO_PITCH_ADDRESS);
+  writeInt(accelZero[2], ACCEL_ZERO_ROLL_ADDRESS);
+  writeInt(accelZero[1], ACCEL_ZERO_YAW_ADDRESS);
+#ifdef debug
+  Serial.print("accelZero written to EEPROM: ");
+  Serial.print(accelZero[0]);
+  Serial.print(", ");
+  Serial.print(accelZero[2]);
+  Serial.print(", ");
+  Serial.println(accelZero[1]);
+#endif
+}
+
+void updateAccels() {
+  if(millis() - lastAccelsUpdate > 20) {
+    accelValue[0] = (accelValue[0]*7 + (i2cReadAccel(0x28) - accelZero[0])) / 8;
+    accelValue[2] = (accelValue[2]*7 + (i2cReadAccel(0x2a) - accelZero[2])) / 8;
+    accelValue[1] = (accelValue[1]*7 + (i2cReadAccel(0x2c) - accelZero[1])) / 8;
+    
+    for(n=0;n<3;n++) {
+      accelSum[n] += accelValue[n];
+    }
+//    accelSum[2] -= 1016; // 1024 , Subtract 1g
+    
+    if(((((accelSum[2] + 8) / 16) * accelUpDownMix) + 128) / 256 > accelAltStab) {
+      accelAltStab++;
+    } else {
+      accelAltStab--;
+    }
+    
+    accelAltStab = constrain(accelAltStab, -100, 100);
+    
+    if(accelSum[2] > 10) accelSum[2] -= 10;
+    if(accelSum[2] < -10) accelSum[2] += 10;
+    
+    lastAccelsUpdate = millis();
+  }
+}
+
+void i2cSend(byte address, byte reg, byte value) {
+  Wire.beginTransmission(address);
+  Wire.send(reg);
+  Wire.send(value);
+  Wire.endTransmission(); 
+}
+
+int i2cReadAccel(int adr) {
+  int r = 0;
+  Wire.beginTransmission(0x1d); Wire.send(adr+1); Wire.endTransmission(); // HIGH
+  Wire.requestFrom(0x1d, 1); while(Wire.available()) { r = Wire.receive(); } r <<= 8;
+  Wire.beginTransmission(0x1d); Wire.send(adr); Wire.endTransmission();
+  Wire.requestFrom(0x1d, 1); while(Wire.available()) { r += Wire.receive(); } // LOW
+  return r;
+}
+
+
