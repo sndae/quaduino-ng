@@ -28,7 +28,7 @@ void calibrateGyros() {
   for(n=0;n<33*3;n++) {
     if(n<3) {
 //      gyroRaw[n] = 0;
-//      gyroSum[n] = 0;
+      gyroSum[n] = 0;
       gyroZero[n] = 0;
       gyroRateOld[n] = 0;
     } else {
@@ -53,5 +53,16 @@ void updateGyros() {
   for(n=0;n<3;n++) {
     gyroRateOld[n] = gyroRate[n];
     gyroRate[n] = (((long) gyroRate[n])*7 + ((long) analogRead(n) - gyroZero[n])) / 8;
+    
+    gyroSum[n] += ((gyroRate[n]+2) / 4);
+    if(gyroSum[n]>1000) {
+      gyroSum[n] = 1000;
+    } else if(gyroSum[n]<-1000) {
+      gyroSum[n] = -1000;
+    }
+    if(n<2) { // Auto zeroing for pitch and roll
+      if(gyroSum[n]>0) gyroSum[n]--;
+      if(gyroSum[n]<0) gyroSum[n]++;
+    }
   }
 }

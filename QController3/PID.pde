@@ -2,8 +2,12 @@
 
 void updatePID() {
   for(n=0;n<3;n++) {
-    pidCmd[n] = gyroRate[n] * 1.8; // P
-    pidCmd[n]-= (gyroRateOld[n] - gyroRate[n]) * -1.5; // D
+    pidCmd[n] = gyroRate[n] * 18; // P
+    pidCmd[n]+= (gyroRate[n] - gyroRateOld[n]) * -15; // D
+    pidCmd[n]/=10;
+    
+    pidCmd[n]+= (gyroSum[n] * 4) / 100; // I
+
     switch(n) {
       case 0: pidCmd[n] -= rcValue[1]; break; // PITCH
       case 1: pidCmd[n] += rcValue[0]; break; // ROLL

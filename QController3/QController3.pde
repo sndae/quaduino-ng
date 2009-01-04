@@ -126,6 +126,8 @@ void loop() {
     for(n=0;n<3;n++) {
       Serial.print(gyroRate[n]);
       Serial.print(":");
+      Serial.print(gyroSum[n]);
+      Serial.print(":");
     }
     Serial.print(flying?1:0);
     Serial.print(":");
