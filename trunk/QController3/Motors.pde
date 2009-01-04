@@ -29,10 +29,10 @@ void updateMotors() {
   interpreteRadioCommands();
   
   // Calculate motor commands
-  motor[0] = constrain((rcValue[2]+rcZero[2]) + pidCmd[0] + pidCmd[2], MINCOMMAND, MAXCOMMAND);
-  motor[1] = constrain((rcValue[2]+rcZero[2]) - pidCmd[0] + pidCmd[2], MINCOMMAND, MAXCOMMAND);
-  motor[2] = constrain((rcValue[2]+rcZero[2]) + pidCmd[1] - pidCmd[2], MINCOMMAND, MAXCOMMAND);
-  motor[3] = constrain((rcValue[2]+rcZero[2]) - pidCmd[1] - pidCmd[2], MINCOMMAND, MAXCOMMAND);
+  motor[0] = constrain((rcValue[2]+rcZero[2]) + pidCmd[0] + pidCmd[2] + accelAltStab, MINCOMMAND, MAXCOMMAND);
+  motor[1] = constrain((rcValue[2]+rcZero[2]) - pidCmd[0] + pidCmd[2] + accelAltStab, MINCOMMAND, MAXCOMMAND);
+  motor[2] = constrain((rcValue[2]+rcZero[2]) + pidCmd[1] - pidCmd[2] + accelAltStab, MINCOMMAND, MAXCOMMAND);
+  motor[3] = constrain((rcValue[2]+rcZero[2]) - pidCmd[1] - pidCmd[2] + accelAltStab, MINCOMMAND, MAXCOMMAND);
   if(flying) {
     // Command motors
     commandMotors(motor[0], motor[1], motor[2], motor[3]);
@@ -49,14 +49,19 @@ void interpreteRadioCommands() {
       flying = false;
     }
     
+    // Arm motors (throttle down, yaw right)  
+    if((rcValue[3]+rcZero[3]) > 1600 && !flying) {
+      flying = true;
+    }
+    
     // Zero gyros (throttle down, yaw left, pitch up)
     if((rcValue[3]+rcZero[3]) < 1400 && ((rcValue[1]+rcZero[1]) > 1600)) {
       calibrateGyros();
     }
-    
-    // Arm motors (throttle down, yaw right)  
-    if((rcValue[3]+rcZero[3]) > 1600 && !flying) {
-      flying = true;
+
+    // Calibrate accels (throttle down, yaw left, pitch down)
+    if((rcValue[3]+rcZero[3]) < 1400 && ((rcValue[1]+rcZero[1]) < 1400)) {
+      calibrateAccel();
     }
   }
   
