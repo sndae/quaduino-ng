@@ -44,32 +44,15 @@ void calibrateRadio() {
 }
 
 void updateRadio() {
+  // Update RC data every 20ms if signal is OK
   if(millis() - lastRcUpdate > 20 && ServoDecode.getState()==RC_READY) {
     for(n=0;n<6;n++) {
-      // rcValue = (oldValue*3 + newValue)/4
-      // rcValue is centered around 0 and mapped to the range <-128,127>
-      // Must do real div 4 to keep sign bit correct
-      if(speccy && (n==0 || n==1 || n==3)) {
-        rcValue[n] = (rcValue[n]*3 + ((ServoDecode.GetChannelPulseWidth(n+1) - rcZero[n]) >> 4)) / 4;
+      if(speccy && (n==0 || n==1 || n==3)) { // Reduce RC sensitivity
+        rcValue[n] = (rcValue[n]*3 + ((ServoDecode.GetChannelPulseWidth(n+1) - rcZero[n]) / 2)) / 4;
       } else {
-        rcValue[n] = (rcValue[n]*3 + ((ServoDecode.GetChannelPulseWidth(n+1) - rcZero[n]) >> 2)) / 4;
+        rcValue[n] = (rcValue[n]*3 + ((ServoDecode.GetChannelPulseWidth(n+1) - rcZero[n]) )) / 4;
       }
     }
     lastRcUpdate = millis();
-    checkRadioCommands();
-  }
-}
-
-void checkRadioCommands() {
-  if(!flying && rcValue[2]<15) {
-    if(rcValue[3]>25) {
-      flying = true;
-    }
-  } else if(flying && rcValue[2]<15) {
-    if(rcValue[3]<-25) {
-      flying = false;
-      for(n=0;n<4;n++) motor[n] = 0;
-      commandMotors(motor[0], motor[1], motor[2], motor[3]);
-    }
   }
 }

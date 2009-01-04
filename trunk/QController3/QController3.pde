@@ -29,17 +29,13 @@
 #include <math.h>
 #include <ServoDecode.h>
 
-//#define debug
+#define debug
 
-// RADIO command states
-#define RC_UNSYNCHED 0
+// RC command states
+#define RC_NOT_SYNCHED 0
 #define RC_ACQUIRING 1
 #define RC_READY 2
-#define RC_FAILSAFE 3
-
-// Misc
-#define EXPECTED_LOOP_TIME 5
-boolean flying = false;
+#define RC_IN_FAILSAFE 3
 
 // Radio Channel data (Roll, Pitch, Throttle, Yaw, Gear, Aux)
 int rcValue[] = { 0, 0, 0, 0, 0, 0};
@@ -48,105 +44,104 @@ boolean speccy = true;
 
 // Gyro data - Order: PITCH, ROLL, YAW
 unsigned int gyroZero[] = { 0, 0, 0 };
-int gyroValueOld[] = { 0, 0, 0 };
-int gyroValue[] = { 0, 0, 0 };
-int gyroRaw[] = { 0, 0, 0 };
+int gyroRateOld[] = { 0, 0, 0};
+int gyroRate[] = { 0, 0, 0 };
 int gyroSum[] = { 0, 0, 0 };
-int gyroIntegralLimit[] = { 1000, 1000, 500 };
 
-// Accel data - Order PITCH, ROLL, YAW(none)
-int accelCorrection[] = { 0, 0, 0 }; // Rp / Np / (none)
 
-// PID
-int pGain[]Ê= { 30, 30, 30 };
-int iGain[] = { 0, 0, 0 };
-int dGain[] = { -15, -15, -15 };
-int pidCmd[] = { 0, 0, 0 };
-
-// Motor
+// Motors
 int motor[] = { 0, 0, 0, 0 };
 
+// PID
+//int pGain[] = { 20, 20, 20 };
+//int iGain[] = { 0, 0, 0 };
+//int dGain[] = { -15, -15, -15 };
+int pidCmd[] = { 0, 0, 0 };
 
-// Temp and index variables
+// PID Values
+/*#define WINDUP_GUARD_GAIN 100.0
+float pGain = 1.8; // 2.0
+float iGain = 0.0;
+float dGain = -1.5;
+
+float pTerm, iTerm, dTerm;
+float iRollState = 0;
+float lastRollPosition = 0;
+float iPitchState = 0;
+float lastPitchPosition = 0;
+float iYawState = 0;
+float lastYawPosition = 0;*/
+
+
+// State
+boolean flying = false;
+
+// Temp variables
 unsigned long tempTime;
 int n, i;
 
-// Loop timing
-unsigned long loopStartTime;
-unsigned int loopCount = 0;
-
+// Timing
+long previousTime = 0;
+long currentTime = 0;
+long deltaTime = 0;
 
 void setup() {
   Serial.begin(57600);
-  helloWorld();
   setupRadio();
   setupMotors();
   calibrateGyros();
+  previousTime = millis();
 }
 
+int loopCount = 0;
 
-void loop () {
-  loopStartTime = millis();
-
+void loop() {
+  // Measure loop rate
+  currentTime = millis();
+  deltaTime = currentTime - previousTime;
+  previousTime = currentTime;
+  
   updateRadio();
   updateGyros();
+  updatePID();
+  updateMotors();
 
-  if(flying) {  
-    updatePID();
-    updateMotors();
-  } else {
-    clearPID();
-    calibrateGyros();
-    processSerial();
-  }
-  
   SoftwareServo::refresh();
- 
- #ifdef debug
+  
+#ifdef debug
   if(loopCount%20==0) {
-    millis()-loopStartTime;
-    Serial.print(rcValue[0]);
-    Serial.print(":");
-    Serial.print(rcValue[1]);
-    Serial.print(":");
-    Serial.print(rcValue[2]);
-    Serial.print(":");
-    Serial.print(rcValue[3]);
-    Serial.print(":");
-    Serial.print(rcValue[4]);
-    Serial.print(":");
-    Serial.print(rcValue[5]);
-    Serial.print(":");
+    for(n=0;n<6;n++) {
+      if(n==0 || n==1 || n==3) {
+        Serial.print(rcValue[n]+1500);
+      } else {
+        Serial.print(rcValue[n]+rcZero[n]);
+      }
+      Serial.print(":");
+    }
     Serial.print(":");
     for(n=0;n<4;n++) {
       Serial.print(motor[n]);
       Serial.print(":");
     }
     for(n=0;n<3;n++) {
-      Serial.print(gyroValue[n]);
-      Serial.print(":");
-      Serial.print(gyroSum[n]);
+      Serial.print(gyroRate[n]);
       Serial.print(":");
     }
-    Serial.print(flying);
+    Serial.print(flying?1:0);
     Serial.print(":");
-    Serial.print(tempTime);
-    Serial.print("/");
-    Serial.println(millis()-loopStartTime);
+    Serial.println(deltaTime);
   }
 #endif
   
-  tempTime = millis()-loopStartTime;
-  if(tempTime<EXPECTED_LOOP_TIME) {
-    delay(EXPECTED_LOOP_TIME-tempTime);
-  }
   loopCount++;
 }
 
 void wait(int ms) {
   tempTime = millis();
   while(millis()-tempTime<ms) {
-    processSerial();
+    if(!flying) {
+      processSerial();
+    }
     SoftwareServo::refresh();
   }
 }
