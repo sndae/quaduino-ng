@@ -6,7 +6,9 @@ void updatePID() {
     pidCmd[n]+= (gyroRate[n] - gyroRateOld[n]) * -15; // D
     pidCmd[n]/=10;
     
-    pidCmd[n]+= (gyroSum[n] * 4) / 100; // I
+    if(rcValue[4]>1500) {
+      pidCmd[n]+= (gyroSum[n] * 4) / 100; // I
+    }
 
     switch(n) {
       case 0: pidCmd[n] -= rcValue[1]; break; // PITCH
