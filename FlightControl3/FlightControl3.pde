@@ -7,6 +7,7 @@
 // =================================================
 // = 2009-09                                       = 
 //
+#include <ctype.h>
 #include <EEPROM.h>
 #include <Wire.h>
 #include <SoftwareServo.h>
@@ -155,8 +156,8 @@ void loop() {
       }
     }
     // Calculate auto level
-    level.rollCount = constrain(level.rollCount + level.rollRatio/15, -20, 20);
-    level.pitchCount = constrain(level.pitchCount + level.pitchRatio/15, -20, 20);
+    level.rollCount = constrain(level.rollCount + level.rollRatio/15, -15, 15);
+    level.pitchCount = constrain(level.pitchCount + level.pitchRatio/15, -15, 15);
     if(level.rollCount>0) { level.rollCount--; }
     if(level.rollCount<0) { level.rollCount++; }
     if(level.pitchCount>0) { level.pitchCount--; }
